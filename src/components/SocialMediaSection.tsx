@@ -1,8 +1,16 @@
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import linkedinIcon from "@/assets/linkedin.webp";
 import tiktokIcon from "@/assets/tiktok.webp";
 import instagramIcon from "@/assets/instagram.webp";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const SocialMediaSection = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const iconsRef = useRef<HTMLAnchorElement[]>([]);
   const socialLinks = [
     {
       name: "LinkedIn",
@@ -34,8 +42,60 @@ const SocialMediaSection = () => {
     { top: '55%', left: '8%', size: 5, delay: 0.2 },
   ];
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const heading = headingRef.current;
+
+    if (!section || !heading) return;
+
+    // Animate heading on scroll
+    gsap.from(heading, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+        end: "top 50%",
+        scrub: 1,
+      },
+    });
+
+    // Stagger animation for social icons
+    iconsRef.current.forEach((icon, index) => {
+      if (icon) {
+        gsap.from(icon, {
+          opacity: 0,
+          scale: 0.5,
+          rotation: -180,
+          duration: 1,
+          delay: index * 0.2,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 70%",
+            end: "top 30%",
+            scrub: 1,
+          },
+        });
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.trigger === section) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
+
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6 md:px-12 py-20 bg-background relative overflow-hidden">
+    <section 
+      ref={sectionRef}
+      className="min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pb-0 bg-background relative overflow-hidden"
+    >
       {/* Metallic 3D dots */}
       {dots.map((dot, index) => (
         <div
@@ -61,14 +121,20 @@ const SocialMediaSection = () => {
           }}
         />
       ))}
-      <h2 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase text-center mb-16 md:mb-24 text-foreground relative z-10">
+      <h2 
+        ref={headingRef}
+        className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase text-center mb-8 md:mb-24 text-foreground relative z-10"
+      >
         Find Us On Our Socials
       </h2>
       
-      <div className="flex flex-wrap items-center justify-center gap-16 md:gap-20 lg:gap-32 relative z-10">
+      <div className="flex flex-wrap items-center justify-center gap-8 md:gap-20 lg:gap-32 relative z-10">
         {socialLinks.map((social, index) => (
           <a
             key={index}
+            ref={(el) => {
+              if (el) iconsRef.current[index] = el;
+            }}
             href={social.url}
             target="_blank"
             rel="noopener noreferrer"
