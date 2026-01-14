@@ -8,10 +8,10 @@ interface MenuOverlayProps {
 
 const menuItems = [
   { label: "Home", href: "/" },
-  { label: "Services", href: "#services" },
-  { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {

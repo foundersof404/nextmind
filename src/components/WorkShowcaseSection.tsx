@@ -34,7 +34,7 @@ const projects = [
 const WorkShowcaseSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageTrackRef = useRef<HTMLDivElement>(null);
-  const textItemsRef = useRef<HTMLDivElement[]>([]);
+  const textItemsRef = useRef<HTMLElement[]>([]);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const mobileContainerRef = useRef<HTMLDivElement>(null);
   const mobileCardsRef = useRef<HTMLDivElement[]>([]);
@@ -219,7 +219,7 @@ const WorkShowcaseSection = () => {
             <article
               key={index}
               ref={(el) => {
-                if (el) textItemsRef.current[index] = el;
+                if (el) textItemsRef.current[index] = el as HTMLElement;
               }}
               className="min-h-[60vh] flex items-center px-8 md:px-16 py-12"
             >
