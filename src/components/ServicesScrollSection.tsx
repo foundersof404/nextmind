@@ -83,7 +83,7 @@ const ServicesScrollSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="h-screen flex items-center overflow-hidden bg-background relative"
+      className="h-screen flex items-center overflow-hidden bg-background relative -mt-32 md:-mt-48"
     >
       {/* Metallic 3D dots */}
       {dots.map((dot, index) => (

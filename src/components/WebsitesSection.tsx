@@ -78,7 +78,7 @@ const WebsitesSection = () => {
   return (
     <section 
       ref={sectionRef}
-      className="min-h-[200vh] flex items-center justify-center py-12 md:py-16 px-6 md:px-12 lg:px-24 -mt-[100vh] -mb-32 md:-mb-48 relative overflow-hidden"
+      className="min-h-[200vh] flex items-center justify-center py-12 md:py-16 px-6 md:px-12 lg:px-24 -mt-[100vh] -mb-48 md:-mb-64 relative overflow-hidden"
     >
       {/* Metallic 3D dots */}
       {dots.map((dot, index) => (
