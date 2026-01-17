@@ -90,7 +90,7 @@ const CollisionSection = () => {
           x: (i) => gsap.utils.random(-300, -100),
           y: (i) => gsap.utils.random(-300, 300),
           rotation: (i) => gsap.utils.random(-180, 180),
-          opacity: 0,
+          opacity: 0.4, // Keep fragments visible
           duration: 0.8,
           ease: "power2.out",
           stagger: 0.02,
@@ -104,7 +104,7 @@ const CollisionSection = () => {
           x: (i) => gsap.utils.random(100, 300),
           y: (i) => gsap.utils.random(-300, 300),
           rotation: (i) => gsap.utils.random(-180, 180),
-          opacity: 0,
+          opacity: 0.4, // Keep fragments visible
           duration: 0.8,
           ease: "power2.out",
           stagger: 0.02,
