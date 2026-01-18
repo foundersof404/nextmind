@@ -301,10 +301,10 @@ const Work = () => {
           ref={heroSectionRef}
           className="h-screen flex items-center justify-center relative overflow-hidden bg-background"
         >
-          <div className="text-center fixed inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 50, marginTop: '-6rem' }}>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
             <h1
               ref={heroTextRef}
-              className="font-hero text-[15vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight"
+              className="font-hero text-[20vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-center"
               style={{
                 color: 'transparent',
                 WebkitTextStroke: '2px rgba(255, 255, 255, 0.8)',

@@ -143,7 +143,7 @@ const SocialMediaSection = () => {
             <img
               src={social.icon}
               alt={social.name}
-              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain transition-all duration-500 ease-out group-hover:scale-125 group-hover:rotate-12"
+              className="w-24 h-24 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain transition-all duration-500 ease-out group-hover:scale-125 group-hover:rotate-12"
             />
           </a>
         ))}

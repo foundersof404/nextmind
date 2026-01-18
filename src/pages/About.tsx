@@ -235,10 +235,10 @@ const About = () => {
             />
           ))}
 
-          <div className="text-center fixed inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 50, marginTop: '-6rem' }}>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
             <h1
               ref={heroTextRef}
-              className="font-hero text-[15vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight"
+              className="font-hero text-[20vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-center"
               style={{
                 color: 'transparent',
                 WebkitTextStroke: '2px rgba(255, 255, 255, 0.8)',
@@ -315,12 +315,20 @@ const About = () => {
               const angles = [10, -10, 10, -10];
               const topPositions = [15, 35, 55, 75];
               
+              // Shortened mobile descriptions
+              const mobileDescriptions = [
+                "Pushing boundaries with cutting-edge tech to set new standards.",
+                "Your success is our mission. Results that exceed expectations.",
+                "Excellence in every line of code, pixel, and interaction.",
+                "We believe in partnership, working closely to achieve goals.",
+              ];
+              
               return (
                 <div
                   key={index}
-                  className="value-tape absolute bg-white flex items-center justify-center"
+                  className="value-tape absolute bg-white flex items-center justify-center px-4 md:px-8"
                   style={{
-                    height: '4.5cm',
+                    height: '3cm',
                     width: '120%',
                     left: '-10%',
                     transform: `rotate(${angles[index]}deg)`,
@@ -328,7 +336,13 @@ const About = () => {
                     transformOrigin: 'center',
                   }}
                 >
-                  <p className="font-hero text-sm md:text-lg lg:text-xl uppercase tracking-wider text-black px-6 text-center leading-tight">
+                  {/* Mobile text - shorter */}
+                  <p className="md:hidden font-hero text-[10px] sm:text-xs uppercase tracking-wide text-black text-center leading-tight px-2">
+                    {mobileDescriptions[index]}
+                  </p>
+                  
+                  {/* Desktop text - full description */}
+                  <p className="hidden md:block font-hero text-base lg:text-xl uppercase tracking-wider text-black text-center leading-tight">
                     {value.description}
                   </p>
                 </div>

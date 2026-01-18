@@ -216,6 +216,8 @@ const WorkShowcaseSection = () => {
         {/* Scrolling Content */}
         <div className="relative z-10">
           {projects.map((project, index) => (
+
+            
             <article
               key={index}
               ref={(el) => {

@@ -14,6 +14,12 @@ const HeroSection = () => {
 
     if (!section || !text) return;
 
+    // Set initial state - text visible and centered
+    gsap.set(text, {
+      scale: 1,
+      opacity: 1,
+    });
+
     // Create the revealing animation
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -41,7 +47,7 @@ const HeroSection = () => {
     };
   }, []);
 
-  // Generate random positions for metallic dots
+  // Metallic 3D dots
   const dots = [
     { top: '15%', left: '10%', size: 8, delay: 0 },
     { top: '25%', left: '85%', size: 6, delay: 0.5 },
@@ -87,10 +93,10 @@ const HeroSection = () => {
       ))}
 
       {/* Main headline with reveal effect */}
-      <div className="text-center fixed inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 50 }}>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
         <h1 
           ref={textRef}
-          className="font-hero text-[15vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight"
+          className="font-hero text-[20vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-center"
           style={{
             color: 'transparent',
             WebkitTextStroke: '2px rgba(255, 255, 255, 0.8)',

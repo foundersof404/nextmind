@@ -63,7 +63,7 @@ const Header = () => {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-40 px-4 md:px-8 py-4">
-        <div className="flex items-center justify-center gap-0 md:gap-2">
+        <div className="flex items-center justify-center gap-4 md:gap-2">
           {/* Brand Section */}
           <a
             href="/"
@@ -79,10 +79,10 @@ const Header = () => {
             </span>
           </a>
 
-          {/* Glassmorphism Navigation */}
+          {/* Glassmorphism Navigation - Hidden on mobile */}
           <nav
             ref={navRef}
-            className="relative px-6 h-10 rounded-lg flex items-center gap-2 md:gap-4"
+            className="hidden md:flex relative px-6 h-10 rounded-lg items-center gap-2 md:gap-4"
             style={{
               background: "rgba(0, 0, 0, 0.3)",
               backdropFilter: "blur(20px)",
@@ -145,7 +145,7 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Menu Button - 3 Dots that animate to + on hover */}
+          {/* Menu Button - Desktop: 3 dots to +, Mobile: + only */}
           <button
             onClick={() => setMenuOpen(true)}
             onMouseEnter={() => setIsMenuHovering(true)}
@@ -158,8 +158,8 @@ const Header = () => {
                 : "none",
             }}
           >
-            {/* Container for dots animation - 3 dots that form a + */}
-            <div className="relative w-5 h-5 flex items-center justify-center">
+            {/* Desktop: 3 dots that form a + on hover */}
+            <div className="hidden md:flex relative w-5 h-5 items-center justify-center">
               {/* Dot 1 - Starts left-center, moves to top-center (vertical line of +) */}
               <span
                 className="absolute w-1.5 h-1.5 rounded-full bg-current"
@@ -209,6 +209,55 @@ const Header = () => {
                   transform: "translate(-50%, -50%)",
                   opacity: isMenuHovering ? 1 : 0,
                   transition: "opacity 0.3s ease",
+                }}
+              />
+            </div>
+
+            {/* Mobile: Always show + */}
+            <div className="md:hidden relative w-5 h-5 flex items-center justify-center">
+              {/* Top dot */}
+              <span
+                className="absolute w-1.5 h-1.5 rounded-full bg-current"
+                style={{
+                  left: "50%",
+                  top: "25%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+              {/* Center dot */}
+              <span
+                className="absolute w-1.5 h-1.5 rounded-full bg-current"
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+              {/* Bottom dot */}
+              <span
+                className="absolute w-1.5 h-1.5 rounded-full bg-current"
+                style={{
+                  left: "50%",
+                  top: "75%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+              {/* Left dot */}
+              <span
+                className="absolute w-1.5 h-1.5 rounded-full bg-current"
+                style={{
+                  left: "25%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+              {/* Right dot */}
+              <span
+                className="absolute w-1.5 h-1.5 rounded-full bg-current"
+                style={{
+                  left: "75%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
                 }}
               />
             </div>
