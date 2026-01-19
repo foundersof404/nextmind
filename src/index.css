@@ -4,9 +4,64 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  cursor: none !important;
+}
+
+body, html {
+  cursor: none !important;
+}
+
+::selection {
+  background-color: #FF8C00;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #FF8C00;
+  color: #ffffff;
+}
+
+/* Custom Scrollbar - Orange (Vertical Only) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 0; /* Hide horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF8C00 0%, #ff6600 100%);
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffa500 0%, #FF8C00 100%);
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #FF8C00 #1a1a1a;
+}
+
+/* Hide horizontal scrollbar */
+body {
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
+}
+
 @layer base {
   :root {
-    --background: 220 8% 8%;
+    --background: 0 0% 0%;
     --foreground: 170 25% 90%;
 
     --card: 220 8% 10%;

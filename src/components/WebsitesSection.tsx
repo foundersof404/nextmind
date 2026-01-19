@@ -63,24 +63,24 @@ const WebsitesSection = () => {
   const wordsData = ["Websites", "that", "excite", "engage", "delight"];
 
   const dots = [
-    { top: '15%', left: '10%', size: 8, delay: 0 },
-    { top: '25%', left: '85%', size: 6, delay: 0.5 },
-    { top: '70%', left: '15%', size: 10, delay: 1 },
-    { top: '80%', left: '80%', size: 5, delay: 1.5 },
-    { top: '40%', left: '5%', size: 7, delay: 0.3 },
-    { top: '60%', left: '92%', size: 9, delay: 0.8 },
-    { top: '10%', left: '60%', size: 4, delay: 1.2 },
-    { top: '85%', left: '40%', size: 6, delay: 0.6 },
-    { top: '35%', left: '95%', size: 8, delay: 1.8 },
-    { top: '55%', left: '8%', size: 5, delay: 0.2 },
+    { top: '15%', left: '10%', size: 8, delay: 0, type: 'metallic' },
+    { top: '25%', left: '85%', size: 6, delay: 0.5, type: 'metallic' },
+    { top: '70%', left: '15%', size: 10, delay: 1, type: 'orange' },
+    { top: '80%', left: '80%', size: 5, delay: 1.5, type: 'metallic' },
+    { top: '40%', left: '5%', size: 7, delay: 0.3, type: 'orange' },
+    { top: '60%', left: '92%', size: 9, delay: 0.8, type: 'metallic' },
+    { top: '10%', left: '60%', size: 4, delay: 1.2, type: 'metallic' },
+    { top: '85%', left: '40%', size: 6, delay: 0.6, type: 'orange' },
+    { top: '35%', left: '95%', size: 8, delay: 1.8, type: 'metallic' },
+    { top: '55%', left: '8%', size: 5, delay: 0.2, type: 'metallic' },
   ];
 
   return (
     <section 
       ref={sectionRef}
-      className="min-h-[200vh] flex items-center justify-center py-12 md:py-16 px-6 md:px-12 lg:px-24 -mt-[100vh] -mb-48 md:-mb-64 relative overflow-hidden"
+      className="min-h-[200vh] flex items-center justify-center py-12 md:py-16 px-6 md:px-12 lg:px-24 -mt-[100vh] -mb-16 md:-mb-20 relative overflow-hidden"
     >
-      {/* Metallic 3D dots */}
+      {/* Metallic 3D dots with some orange */}
       {dots.map((dot, index) => (
         <div
           key={index}
@@ -90,16 +90,28 @@ const WebsitesSection = () => {
             left: dot.left,
             width: dot.size,
             height: dot.size,
-            background: `radial-gradient(circle at 30% 30%, 
-              hsl(220, 20%, 90%) 0%, 
-              hsl(220, 15%, 70%) 40%, 
-              hsl(220, 10%, 50%) 70%, 
-              hsl(220, 8%, 30%) 100%)`,
-            boxShadow: `
-              0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-              inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-              inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-            `,
+            background: dot.type === 'orange'
+              ? `radial-gradient(circle at 30% 30%, 
+                  hsl(30, 100%, 65%) 0%, 
+                  hsl(30, 100%, 55%) 40%, 
+                  hsl(30, 90%, 45%) 70%, 
+                  hsl(30, 80%, 35%) 100%)`
+              : `radial-gradient(circle at 30% 30%, 
+                  hsl(220, 20%, 90%) 0%, 
+                  hsl(220, 15%, 70%) 40%, 
+                  hsl(220, 10%, 50%) 70%, 
+                  hsl(220, 8%, 30%) 100%)`,
+            boxShadow: dot.type === 'orange'
+              ? `
+                0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4),
+                inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.3),
+                inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 180, 100, 0.4)
+              `
+              : `
+                0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
+                inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
+                inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
+              `,
             animationDelay: `${dot.delay}s`,
             animationDuration: '3s',
           }}
