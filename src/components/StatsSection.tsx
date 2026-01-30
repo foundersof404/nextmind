@@ -16,6 +16,7 @@ const StatsSection = () => {
 
   useEffect(() => {
     const section = sectionRef.current;
+    const isMobile = window.innerWidth < 768;
 
     if (!section) return;
 
@@ -26,6 +27,7 @@ const StatsSection = () => {
       const stat = stats[index];
       const numberElement = statElement.querySelector(".stat-number");
       const labelElement = statElement.querySelector(".stat-label");
+      const progressCircle = statElement.querySelector(".progress-circle") as SVGCircleElement;
 
       if (!numberElement || !labelElement) return;
 
@@ -61,6 +63,14 @@ const StatsSection = () => {
         onUpdate: () => {
           if (numberElement) {
             numberElement.textContent = `${stat.prefix}${Math.round(counter.value)}`;
+          }
+          
+          // Mobile: Animate circular progress
+          if (isMobile && progressCircle) {
+            const progress = counter.value / stat.value;
+            const circumference = 2 * Math.PI * 45; // radius = 45
+            const offset = circumference - (progress * circumference);
+            progressCircle.style.strokeDashoffset = offset.toString();
           }
         },
       });
@@ -104,7 +114,7 @@ const StatsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="flex items-center justify-center px-6 md:px-12 py-6 md:py-12 bg-background relative overflow-hidden"
+      className="flex items-center justify-center px-6 md:px-12 py-10 md:py-20 bg-background relative overflow-hidden"
     >
       {/* Metallic 3D dots */}
       {dots.map((dot, index) => (
@@ -132,24 +142,70 @@ const StatsSection = () => {
         />
       ))}
 
-      <div className="flex flex-row md:flex-row items-center justify-center gap-3 md:gap-12 lg:gap-16 relative z-10 w-full max-w-7xl">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 lg:gap-16 relative z-10 w-full max-w-7xl">
         {stats.map((stat, index) => (
           <div
             key={index}
             ref={(el) => {
               if (el) statsRef.current[index] = el;
             }}
-            className="text-center flex-1"
+            className="text-center flex-1 relative"
           >
+            {/* Mobile-only: Circular Progress */}
+            <div className="md:hidden relative inline-block mb-4">
+              <svg className="w-32 h-32" viewBox="0 0 100 100">
+                {/* Background circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="rgba(255, 140, 0, 0.1)"
+                  strokeWidth="8"
+                />
+                {/* Progress circle */}
+                <circle
+                  className="progress-circle"
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#FF8C00"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={`${2 * Math.PI * 45}`}
+                  strokeDashoffset={`${2 * Math.PI * 45}`}
+                  transform="rotate(-90 50 50)"
+                  style={{
+                    filter: 'drop-shadow(0 0 8px rgba(255, 140, 0, 0.6))',
+                    transition: 'stroke-dashoffset 0.5s ease',
+                  }}
+                />
+              </svg>
+              {/* Number inside circle */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div
+                  className="stat-number font-hero text-4xl font-bold text-foreground"
+                  style={{
+                    textShadow: '0 0 20px rgba(255, 140, 0, 0.5)',
+                  }}
+                >
+                  {stat.prefix}0
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop: Regular number */}
             <div
-              className="stat-number font-hero text-3xl md:text-7xl lg:text-8xl font-bold text-foreground mb-2 md:mb-4"
+              className="hidden md:block stat-number font-hero text-7xl lg:text-8xl font-bold text-foreground mb-2 md:mb-4"
               style={{
                 textShadow: '0 0 20px rgba(255, 255, 255, 0.1)',
               }}
             >
               {stat.prefix}0
             </div>
-            <div className="stat-label font-serif text-xs md:text-xl lg:text-2xl text-foreground/80 uppercase tracking-wider">
+
+            <div className="stat-label font-serif text-sm md:text-xl lg:text-2xl text-foreground/80 uppercase tracking-wider">
               {stat.label}
             </div>
           </div>

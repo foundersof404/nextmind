@@ -59,6 +59,62 @@ html {
   overflow-x: hidden;
 }
 
+/* Mobile View: Compact sections with no extra space */
+@media (max-width: 768px) {
+  /* Remove extra spacing between sections on mobile */
+  section {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Compact padding for mobile sections */
+  .mobile-compact {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  /* Make sections flow together */
+  main > section + section {
+    margin-top: 0 !important;
+  }
+  
+  /* Reduce min-height for mobile */
+  .min-h-screen {
+    min-height: auto !important;
+  }
+  
+  /* Override any large margins */
+  .container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Gooey Footer Particle Animation */
+.gooey-particle {
+  position: absolute;
+  background: #FF8C00;
+  border-radius: 50%;
+  top: 50%;
+  left: var(--particle-x, 50%);
+  width: var(--particle-size, 5rem);
+  height: var(--particle-size, 5rem);
+  transform: translate(-50%, -50%);
+  animation: float-up var(--particle-duration, 4s) ease-in infinite;
+  animation-delay: var(--particle-delay, 0s);
+}
+
+@keyframes float-up {
+  0% {
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    top: calc(var(--particle-uplift, 15rem) * -1);
+    transform: translate(-50%, -50%) scale(0);
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 0%;

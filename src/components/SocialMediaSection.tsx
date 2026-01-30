@@ -30,16 +30,19 @@ const SocialMediaSection = () => {
   ];
 
   const dots = [
-    { top: '15%', left: '10%', size: 8, delay: 0 },
-    { top: '25%', left: '85%', size: 6, delay: 0.5 },
-    { top: '70%', left: '15%', size: 10, delay: 1 },
-    { top: '80%', left: '80%', size: 5, delay: 1.5 },
-    { top: '40%', left: '5%', size: 7, delay: 0.3 },
-    { top: '60%', left: '92%', size: 9, delay: 0.8 },
-    { top: '10%', left: '60%', size: 4, delay: 1.2 },
-    { top: '85%', left: '40%', size: 6, delay: 0.6 },
-    { top: '35%', left: '95%', size: 8, delay: 1.8 },
-    { top: '55%', left: '8%', size: 5, delay: 0.2 },
+    { top: '15%', left: '10%', size: 8, delay: 0, type: 'orange' },
+    { top: '25%', left: '85%', size: 6, delay: 0.5, type: 'metallic' },
+    { top: '70%', left: '15%', size: 10, delay: 1, type: 'orange' },
+    { top: '80%', left: '80%', size: 5, delay: 1.5, type: 'metallic' },
+    { top: '40%', left: '5%', size: 7, delay: 0.3, type: 'orange' },
+    { top: '60%', left: '92%', size: 9, delay: 0.8, type: 'metallic' },
+    { top: '10%', left: '60%', size: 4, delay: 1.2, type: 'metallic' },
+    { top: '85%', left: '40%', size: 6, delay: 0.6, type: 'orange' },
+    { top: '35%', left: '95%', size: 8, delay: 1.8, type: 'metallic' },
+    { top: '55%', left: '8%', size: 5, delay: 0.2, type: 'orange' },
+    { top: '20%', left: '50%', size: 7, delay: 0.9, type: 'orange' },
+    { top: '65%', left: '45%', size: 6, delay: 1.3, type: 'metallic' },
+    { top: '90%', left: '20%', size: 8, delay: 0.7, type: 'orange' },
   ];
 
   useEffect(() => {
@@ -94,9 +97,9 @@ const SocialMediaSection = () => {
   return (
     <section 
       ref={sectionRef}
-      className="min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pb-0 bg-background relative overflow-hidden"
+      className="min-h-[50vh] md:min-h-screen flex flex-col items-center justify-center px-6 md:px-12 py-12 md:py-0 bg-background relative overflow-hidden"
     >
-      {/* Metallic 3D dots */}
+      {/* Metallic 3D dots with orange accents */}
       {dots.map((dot, index) => (
         <div
           key={index}
@@ -106,16 +109,28 @@ const SocialMediaSection = () => {
             left: dot.left,
             width: dot.size,
             height: dot.size,
-            background: `radial-gradient(circle at 30% 30%, 
-              hsl(220, 20%, 90%) 0%, 
-              hsl(220, 15%, 70%) 40%, 
-              hsl(220, 10%, 50%) 70%, 
-              hsl(220, 8%, 30%) 100%)`,
-            boxShadow: `
-              0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-              inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-              inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-            `,
+            background: dot.type === 'orange'
+              ? `radial-gradient(circle at 30% 30%, 
+                  hsl(30, 100%, 65%) 0%, 
+                  hsl(30, 100%, 55%) 40%, 
+                  hsl(30, 90%, 45%) 70%, 
+                  hsl(30, 80%, 35%) 100%)`
+              : `radial-gradient(circle at 30% 30%, 
+                  hsl(220, 20%, 90%) 0%, 
+                  hsl(220, 15%, 70%) 40%, 
+                  hsl(220, 10%, 50%) 70%, 
+                  hsl(220, 8%, 30%) 100%)`,
+            boxShadow: dot.type === 'orange'
+              ? `
+                0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4),
+                inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.3),
+                inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 180, 100, 0.4)
+              `
+              : `
+                0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
+                inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
+                inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
+              `,
             animationDelay: `${dot.delay}s`,
             animationDuration: '3s',
           }}
@@ -123,12 +138,17 @@ const SocialMediaSection = () => {
       ))}
       <h2 
         ref={headingRef}
-        className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase text-center mb-8 md:mb-24 text-foreground relative z-10"
+        className="font-hero text-3xl md:text-6xl lg:text-7xl font-bold uppercase text-center mb-6 md:mb-16 text-foreground relative z-10"
       >
         Find Us On Our Socials
       </h2>
+
+      {/* Mobile-only: Professional description */}
+      <p className="md:hidden text-center text-foreground/70 text-sm mb-10 px-6 max-w-md mx-auto relative z-10">
+        Follow us for the latest updates, insights, and behind-the-scenes content
+      </p>
       
-      <div className="flex flex-wrap items-center justify-center gap-8 md:gap-20 lg:gap-32 relative z-10">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 lg:gap-32 relative z-10">
         {socialLinks.map((social, index) => (
           <a
             key={index}
@@ -138,12 +158,29 @@ const SocialMediaSection = () => {
             href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative"
+            className="group relative w-full md:w-auto"
           >
+            {/* Mobile: Card layout with icon and name */}
+            <div className="md:hidden flex items-center gap-4 bg-black/20 border border-orange-500/20 rounded-2xl p-4 backdrop-blur-sm transition-all duration-300 hover:bg-orange-500/10 hover:border-orange-500/50 hover:scale-105">
+              <img
+                src={social.icon}
+                alt={social.name}
+                className="w-16 h-16 object-contain transition-all duration-300 drop-shadow-[0_0_15px_rgba(255,140,0,0.4)]"
+              />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-foreground uppercase tracking-wide">{social.name}</h3>
+                <p className="text-xs text-orange-500 font-medium">@nextmind</p>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                <span className="text-orange-500 font-bold">→</span>
+              </div>
+            </div>
+
+            {/* Desktop: Original icon only */}
             <img
               src={social.icon}
               alt={social.name}
-              className="w-24 h-24 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain transition-all duration-500 ease-out group-hover:scale-125 group-hover:rotate-12"
+              className="hidden md:block w-64 lg:w-80 h-64 lg:h-80 object-contain transition-all duration-500 ease-out group-hover:scale-125 group-hover:rotate-12 drop-shadow-[0_0_20px_rgba(255,140,0,0.5)] group-hover:drop-shadow-[0_0_40px_rgba(255,140,0,0.8)]"
             />
           </a>
         ))}

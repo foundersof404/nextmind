@@ -62,8 +62,45 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 px-4 md:px-8 py-4">
-        <div className="flex items-center justify-center gap-0 md:gap-2">
+      <header className="fixed top-0 left-0 right-0 z-[9999] px-4 md:px-8 py-4"
+        style={{
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+        }}
+      >
+        {/* Mobile Layout - Brand left, Menu right, come closer on scroll and center */}
+        <div className="md:hidden flex items-center gap-4"
+          style={{
+            justifyContent: isScrolled ? 'center' : 'space-between',
+            paddingLeft: isScrolled ? '0' : '0',
+            paddingRight: isScrolled ? '0' : '0',
+            transition: 'justify-content 0.6s ease, gap 0.6s ease',
+            gap: isScrolled ? '1rem' : '0',
+          }}
+        >
+          {/* Brand - Moves to center on scroll */}
+          <a
+            href="/"
+            className="flex items-center px-3 h-10 rounded-lg bg-background/90 backdrop-blur-sm border border-foreground/10 transition-all duration-600"
+          >
+            <span className="text-foreground text-xs tracking-widest font-medium">
+              ɴᴇxᴛᴍɪɴᴅ
+            </span>
+          </a>
+
+          {/* Menu Button - Moves to center next to brand on scroll (Three horizontal lines) */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="flex flex-col items-center justify-center w-10 h-10 gap-1.5 rounded-lg bg-background/90 backdrop-blur-sm border border-foreground/10 text-foreground transition-all duration-600"
+          >
+            <span className="w-5 h-0.5 bg-current rounded-full"></span>
+            <span className="w-5 h-0.5 bg-current rounded-full"></span>
+            <span className="w-5 h-0.5 bg-current rounded-full"></span>
+          </button>
+        </div>
+
+        {/* Desktop Layout - Original centered design */}
+        <div className="hidden md:flex items-center justify-center gap-0 md:gap-2">
           {/* Brand Section */}
           <a
             href="/"
@@ -145,7 +182,7 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Menu Button - 3 Dots that animate to + on hover */}
+          {/* Menu Button - 3 Dots that animate to + on hover (Desktop only) */}
           <button
             onClick={() => setMenuOpen(true)}
             onMouseEnter={() => setIsMenuHovering(true)}

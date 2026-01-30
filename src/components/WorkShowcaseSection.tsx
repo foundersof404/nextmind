@@ -10,104 +10,174 @@ const projects = [
     description: "Connecting fans with their player's stories",
     tags: ["DESIGN", "DEVELOPMENT", "3D"],
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&h=700&fit=crop",
+    duration: "6 months",
+    result: "+250% engagement",
+    client: "Marriott Hotels",
   },
   {
     title: "Nova AI Platform",
     description: "Next-gen artificial intelligence dashboard",
     tags: ["AI", "DEVELOPMENT", "UI/UX"],
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=700&fit=crop",
+    duration: "8 months",
+    result: "500K+ users",
+    client: "Nova Tech",
   },
   {
     title: "Rawan Creates",
     description: "Branding & Social Media Specialist",
     tags: ["BRANDING", "SOCIAL MEDIA", "DESIGN"],
     image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&h=700&fit=crop",
+    duration: "3 months",
+    result: "+400% followers",
+    client: "Rawan Media",
   },
   {
     title: "RetailPro POS",
     description: "Modern point of sale system redesign",
     tags: ["DESIGN", "POS", "MOBILE"],
     image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=700&fit=crop",
+    duration: "5 months",
+    result: "50% faster checkout",
+    client: "RetailPro Inc",
   },
 ];
 
 const WorkShowcaseSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const slidesRef = useRef<HTMLDivElement[]>([]);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const slides = slidesRef.current.filter(Boolean);
-    if (slides.length === 0) return;
+    const cards = cardsRef.current.filter(Boolean);
+    if (cards.length === 0) return;
 
-    // Set initial state - first slide visible, others below
-    slides.forEach((slide, index) => {
-      gsap.set(slide, {
-        y: index === 0 ? 0 : "100%",
-        opacity: index === 0 ? 1 : 0,
-        scale: index === 0 ? 1 : 0.8,
-        rotationX: index === 0 ? 0 : 15,
+    const isMobile = window.innerWidth < 768;
+
+    // Set initial state for all cards
+    cards.forEach((card) => {
+      const leftPanel = card.querySelector('.left-panel') as HTMLElement;
+      const rightPanel = card.querySelector('.right-panel') as HTMLElement;
+      const number = card.querySelector('.project-number') as HTMLElement;
+      
+      if (leftPanel && rightPanel && number) {
+        if (isMobile) {
+          // Mobile: cards slide up and rotate slightly
+          gsap.set(leftPanel, { y: 100, opacity: 0, rotation: -5 });
+          gsap.set(rightPanel, { y: 100, opacity: 0, rotation: 5, scale: 0.9 });
+          gsap.set(number, { rotation: 0, scale: 0, opacity: 0 });
+        } else {
+          gsap.set(leftPanel, { xPercent: -100, opacity: 0 });
+          gsap.set(rightPanel, { xPercent: 100, opacity: 0 });
+          gsap.set(number, { rotation: 0, scale: 0, opacity: 0 });
+        }
+      }
+    });
+
+    // Create scroll-triggered timeline for each card
+    cards.forEach((card, index) => {
+      const leftPanel = card.querySelector('.left-panel') as HTMLElement;
+      const rightPanel = card.querySelector('.right-panel') as HTMLElement;
+      const number = card.querySelector('.project-number') as HTMLElement;
+      const tags = card.querySelectorAll('.project-tag');
+      const infoBadges = card.querySelectorAll('.project-info-badge');
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: card,
+          start: "top center+=100",
+          end: "bottom center-=100",
+          toggleActions: "play none none reverse",
+          markers: false,
+        },
       });
-    });
 
-    // Create timeline for automatic slide transitions
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: `+=${projects.length * 1500}`, // Each project gets scroll space
-        scrub: 2,
-        pin: true,
-        markers: false,
-      },
-    });
+      if (isMobile) {
+        // Mobile animations: slide up with rotation
+        // Animate number pulsing in
+        tl.to(number, {
+          rotation: 720,
+          scale: 1,
+          opacity: 1,
+          duration: 1.2,
+          ease: "back.out(1.7)",
+        }, 0);
 
-    // Animate each slide transition - slide up from bottom with morph effect
-    slides.forEach((slide, index) => {
-      if (index < slides.length - 1) {
-        const nextSlide = slides[index + 1];
-        
-        // Morph current slide: slide up, scale down, rotate
-        tl.to(
-          slide,
-          {
-            y: "-100%",
-            opacity: 0,
-            scale: 0.8,
-            rotationX: -15,
-            duration: 1.2,
-            ease: "power2.inOut",
-          },
-          index + 0.5
-        );
+        // Slide up left panel with rotation
+        tl.to(leftPanel, {
+          y: 0,
+          opacity: 1,
+          rotation: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        }, 0.3);
 
-        // Morph next slide: slide up from bottom, scale up, rotate to normal
-        tl.fromTo(
-          nextSlide,
-          {
-            y: "100%",
-            opacity: 0,
-            scale: 0.8,
-            rotationX: 15,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.2,
-            ease: "power2.inOut",
-          },
-          index + 0.5
-        );
+        // Slide up right panel with scale
+        tl.to(rightPanel, {
+          y: 0,
+          opacity: 1,
+          rotation: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power3.out",
+        }, 0.4);
+
+        // Animate info badges sliding up
+        tl.from(infoBadges, {
+          y: 20,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power2.out",
+        }, 0.7);
+
+        // Stagger animate tags with bounce
+        tl.from(tags, {
+          scale: 0,
+          opacity: 0,
+          stagger: 0.08,
+          duration: 0.4,
+          ease: "back.out(1.7)",
+        }, 0.9);
+      } else {
+        // Desktop animations (original)
+        tl.to(number, {
+          rotation: 360,
+          scale: 1,
+          opacity: 1,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+        }, 0);
+
+        tl.to(leftPanel, {
+          xPercent: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+        }, 0.2);
+
+        tl.to(rightPanel, {
+          xPercent: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+        }, 0.3);
+
+        tl.from(tags, {
+          y: 20,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power2.out",
+        }, 0.6);
       }
     });
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars.trigger === section) {
+        if (trigger.vars.trigger && cardsRef.current.includes(trigger.vars.trigger as HTMLDivElement)) {
           trigger.kill();
         }
       });
@@ -135,7 +205,7 @@ const WorkShowcaseSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen bg-background overflow-hidden"
+      className="relative min-h-[80vh] md:min-h-screen bg-background py-10 md:py-32 overflow-hidden"
     >
       {/* Metallic dots with some orange */}
       {dots.map((dot, index) => (
@@ -176,53 +246,104 @@ const WorkShowcaseSection = () => {
         />
       ))}
 
-      {/* Project Slides */}
-      {projects.map((project, index) => (
-        <div
-          key={index}
-          ref={(el) => {
-            if (el) slidesRef.current[index] = el;
-          }}
-          className="absolute inset-0 flex items-center justify-center px-6 md:px-12 lg:px-24"
-          style={{ zIndex: 10 }}
-        >
-          <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Text Content */}
-            <div className="order-2 md:order-1">
-              <div className="font-hero text-sm uppercase tracking-widest text-foreground/40 mb-2">
-                {String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
-              </div>
-              <h2 className="font-hero text-4xl md:text-5xl lg:text-6xl font-bold uppercase text-foreground mb-4 leading-tight">
-                {project.title}
-              </h2>
-              <p className="text-lg md:text-xl text-foreground/80 font-light leading-relaxed mb-6">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag, i) => (
-                  <span
-                    key={i}
-                    className="text-xs md:text-sm px-4 py-2 border border-foreground/30 text-foreground/70 uppercase tracking-wider"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+      {/* Section Title */}
+      <div className="container mx-auto px-6 md:px-12 mb-6 md:mb-16 relative z-10">
+        <h2 className="font-hero text-2xl md:text-6xl lg:text-7xl font-bold uppercase text-foreground">
+          Our Work
+        </h2>
+        <p className="md:hidden text-sm text-foreground/60 mt-2">Showcasing excellence in every project</p>
+        <div className="w-16 md:w-24 h-1 bg-orange-500 mt-2 md:mt-4"></div>
+      </div>
+
+      {/* Project Cards */}
+      <div className="container mx-auto px-6 md:px-12 space-y-12 md:space-y-32 relative z-10">
+        {projects.map((project, index) => (
+          <div
+            key={index}
+            ref={(el) => {
+              if (el) cardsRef.current[index] = el;
+            }}
+            className="relative min-h-[350px] md:min-h-[600px] flex items-center isolate"
+          >
+            {/* Rotating Number Background - Behind content (z-index -1 within isolated card) */}
+            <div
+              className="project-number absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[25vw] md:text-[15vw] font-hero font-bold opacity-5 pointer-events-none"
+              style={{ color: '#FF8C00', zIndex: -1 }}
+            >
+              {String(index + 1).padStart(2, '0')}
             </div>
 
-            {/* Image with white border */}
-            <div className="order-1 md:order-2">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-auto aspect-video object-cover"
-                />
+            {/* Split Panel Container - content above number */}
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 items-center relative z-0" style={{ isolation: 'isolate' }}>
+              {/* Left Panel - Text Content */}
+              <div className={`left-panel relative z-10 ${index % 2 === 1 ? 'md:order-2' : ''}`}>
+                <div className="space-y-3 md:space-y-6">
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <span className="font-hero text-4xl md:text-7xl font-bold text-orange-500">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <div className="flex-1 h-px bg-gradient-to-r from-orange-500 to-transparent"></div>
+                  </div>
+                  
+                  <h3 className="font-hero text-2xl md:text-4xl lg:text-5xl font-bold uppercase text-foreground leading-tight">
+                    {project.title}
+                  </h3>
+                  
+                  <p className="text-base md:text-xl text-foreground/70 leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  {/* Mobile-only: Project Info Badges */}
+                  <div className="md:hidden grid grid-cols-3 gap-2 py-3">
+                    <div className="project-info-badge bg-black/40 border border-orange-500/30 rounded-lg p-2 text-center">
+                      <div className="text-xs text-foreground/50 uppercase tracking-wide mb-1">Duration</div>
+                      <div className="text-sm font-bold text-orange-500">{project.duration}</div>
+                    </div>
+                    <div className="project-info-badge bg-black/40 border border-orange-500/30 rounded-lg p-2 text-center">
+                      <div className="text-xs text-foreground/50 uppercase tracking-wide mb-1">Result</div>
+                      <div className="text-sm font-bold text-orange-500">{project.result}</div>
+                    </div>
+                    <div className="project-info-badge bg-black/40 border border-orange-500/30 rounded-lg p-2 text-center">
+                      <div className="text-xs text-foreground/50 uppercase tracking-wide mb-1">Client</div>
+                      <div className="text-xs font-bold text-foreground truncate">{project.client}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 md:gap-3 pt-2 md:pt-4">
+                    {project.tags.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="project-tag px-3 md:px-5 py-1.5 md:py-2.5 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs md:text-sm uppercase tracking-wider font-medium rounded-full hover:bg-orange-500/20 transition-colors"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Panel - Image */}
+              <div className={`right-panel relative z-10 ${index % 2 === 1 ? 'md:order-1' : ''}`}>
+                <div className="relative group z-10">
+                  {/* Orange glow effect */}
+                  <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Image container */}
+                  <div className="relative z-10 rounded-2xl overflow-hidden border-4 border-orange-500/20 group-hover:border-orange-500/50 transition-all duration-500">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-auto aspect-video object-cover transform group-hover:scale-105 transition-transform duration-700"
+                    />
+                    {/* Overlay gradient on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 };

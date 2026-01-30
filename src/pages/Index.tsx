@@ -8,23 +8,25 @@ import BrightInDarkSection from "@/components/BrightInDarkSection";
 import StatsSection from "@/components/StatsSection";
 import SocialMediaSection from "@/components/SocialMediaSection";
 import Footer from "@/components/Footer";
+import MobileEnhancements from "@/components/MobileEnhancements";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>
-        <HeroSection />
-        <WebsitesSection />
-        <CollisionSection />
-        <ServicesScrollSection />
-        <WorkShowcaseSection />
-        <BrightInDarkSection />
-        <SocialMediaSection />
-        <StatsSection />
-      </main>
-      <Footer />
-    </div>
+    <MobileEnhancements>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="relative">
+          <HeroSection />
+          <WebsitesSection />
+          <ServicesScrollSection />
+          <WorkShowcaseSection />
+          <BrightInDarkSection />
+          <SocialMediaSection />
+          <StatsSection />
+        </main>
+        <Footer />
+      </div>
+    </MobileEnhancements>
   );
 };
 

@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MobileEnhancements from "@/components/MobileEnhancements";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -182,26 +183,27 @@ const Contact = () => {
   }, []);
 
   const metallicDots = [
-    { top: '15%', left: '10%', size: 8, delay: 0 },
-    { top: '25%', left: '85%', size: 6, delay: 0.5 },
-    { top: '70%', left: '15%', size: 10, delay: 1 },
-    { top: '80%', left: '80%', size: 5, delay: 1.5 },
-    { top: '40%', left: '5%', size: 7, delay: 0.3 },
-    { top: '60%', left: '92%', size: 9, delay: 0.8 },
-    { top: '10%', left: '60%', size: 4, delay: 1.2 },
-    { top: '85%', left: '40%', size: 6, delay: 0.6 },
-    { top: '35%', left: '95%', size: 8, delay: 1.8 },
-    { top: '55%', left: '8%', size: 5, delay: 0.2 },
-    { top: '20%', left: '50%', size: 7, delay: 0.9 },
-    { top: '65%', left: '70%', size: 9, delay: 1.3 },
-    { top: '45%', left: '25%', size: 6, delay: 0.7 },
-    { top: '90%', left: '60%', size: 8, delay: 1.6 },
-    { top: '5%', left: '35%', size: 5, delay: 0.4 },
+    { top: '15%', left: '10%', size: 8, delay: 0, type: 'orange' },
+    { top: '25%', left: '85%', size: 6, delay: 0.5, type: 'metallic' },
+    { top: '70%', left: '15%', size: 10, delay: 1, type: 'orange' },
+    { top: '80%', left: '80%', size: 5, delay: 1.5, type: 'metallic' },
+    { top: '40%', left: '5%', size: 7, delay: 0.3, type: 'orange' },
+    { top: '60%', left: '92%', size: 9, delay: 0.8, type: 'metallic' },
+    { top: '10%', left: '60%', size: 4, delay: 1.2, type: 'metallic' },
+    { top: '85%', left: '40%', size: 6, delay: 0.6, type: 'orange' },
+    { top: '35%', left: '95%', size: 8, delay: 1.8, type: 'metallic' },
+    { top: '55%', left: '8%', size: 5, delay: 0.2, type: 'orange' },
+    { top: '20%', left: '50%', size: 7, delay: 0.9, type: 'metallic' },
+    { top: '65%', left: '70%', size: 9, delay: 1.3, type: 'orange' },
+    { top: '45%', left: '25%', size: 6, delay: 0.7, type: 'metallic' },
+    { top: '90%', left: '60%', size: 8, delay: 1.6, type: 'orange' },
+    { top: '5%', left: '35%', size: 5, delay: 0.4, type: 'metallic' },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <MobileEnhancements>
+      <div className="min-h-screen bg-background">
+        <Header />
 
       <main className="pt-20">
         <section
@@ -217,16 +219,28 @@ const Contact = () => {
                 left: dot.left,
                 width: dot.size,
                 height: dot.size,
-                background: `radial-gradient(circle at 30% 30%, 
-                  hsl(220, 20%, 90%) 0%, 
-                  hsl(220, 15%, 70%) 40%, 
-                  hsl(220, 10%, 50%) 70%, 
-                  hsl(220, 8%, 30%) 100%)`,
-                boxShadow: `
-                  0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-                  inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-                  inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-                `,
+                background: dot.type === 'orange'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(30, 100%, 65%) 0%, 
+                      hsl(30, 100%, 55%) 40%, 
+                      hsl(30, 90%, 45%) 70%, 
+                      hsl(30, 80%, 35%) 100%)`
+                  : `radial-gradient(circle at 30% 30%, 
+                      hsl(220, 20%, 90%) 0%, 
+                      hsl(220, 15%, 70%) 40%, 
+                      hsl(220, 10%, 50%) 70%, 
+                      hsl(220, 8%, 30%) 100%)`,
+                boxShadow: dot.type === 'orange'
+                  ? `
+                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4),
+                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.3),
+                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 180, 100, 0.4)
+                  `
+                  : `
+                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
+                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
+                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
+                  `,
                 animationDelay: `${dot.delay}s`,
                 animationDuration: '3s',
               }}
@@ -360,7 +374,7 @@ const Contact = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-background border border-foreground/20 focus:border-foreground/60 focus:outline-none transition-colors duration-300 text-foreground"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+961 76 764 263"
                   />
                 </div>
               </div>
@@ -445,6 +459,9 @@ const Contact = () => {
         <section
           ref={infoCardsRef}
           className="px-6 md:px-12 py-16 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #FF8C00 0%, #ff6600 50%, #FF8C00 100%)',
+          }}
         >
           {metallicDots.map((dot, index) => (
             <div
@@ -456,15 +473,11 @@ const Contact = () => {
                 width: dot.size,
                 height: dot.size,
                 background: `radial-gradient(circle at 30% 30%, 
-                  hsl(220, 20%, 90%) 0%, 
-                  hsl(220, 15%, 70%) 40%, 
-                  hsl(220, 10%, 50%) 70%, 
-                  hsl(220, 8%, 30%) 100%)`,
-                boxShadow: `
-                  0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-                  inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-                  inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-                `,
+                  hsl(0, 0%, 15%) 0%, 
+                  hsl(0, 0%, 10%) 40%, 
+                  hsl(0, 0%, 5%) 70%, 
+                  hsl(0, 0%, 0%) 100%)`,
+                boxShadow: `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.6)`,
                 animationDelay: `${dot.delay}s`,
                 animationDuration: '3s',
               }}
@@ -472,36 +485,36 @@ const Contact = () => {
           ))}
           <div className="max-w-6xl mx-auto w-full relative z-10">
             <div className="text-center mb-12">
-              <h2 className="font-hero text-5xl md:text-7xl font-bold uppercase mb-6">
+              <h2 className="font-hero text-5xl md:text-7xl font-bold uppercase mb-6 text-black drop-shadow-lg">
                 Let's Connect
               </h2>
-              <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+              <p className="text-xl text-black/80 max-w-2xl mx-auto font-medium">
                 Reach out to us through any of these channels. We're here to help bring your vision to life.
               </p>
             </div>
 
             <div className="flex justify-center gap-8">
               <a
-                href="mailto:hello@nextmind.com"
-                className="social-card group relative p-12 border-4 border-white hover:border-foreground transition-all duration-300 bg-background overflow-hidden flex flex-col items-center"
+                href="mailto:nextmind@gmail.com"
+                className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
               >
                 <div className="relative z-10 flex flex-col items-center">
-                  <Mail className="w-20 h-20 text-white mb-4" strokeWidth={1.5} />
-                  <h3 className="font-hero text-sm uppercase tracking-wider text-foreground">
+                  <Mail className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
+                  <h3 className="font-hero text-sm uppercase tracking-wider text-black">
                     Gmail
                   </h3>
                 </div>
               </a>
 
               <a
-                href="https://wa.me/15551234567"
+                href="https://wa.me/96176764263"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="social-card group relative p-12 border-4 border-white hover:border-foreground transition-all duration-300 bg-background overflow-hidden flex flex-col items-center"
+                className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
               >
                 <div className="relative z-10 flex flex-col items-center">
-                  <MessageCircle className="w-20 h-20 text-white mb-4" strokeWidth={1.5} />
-                  <h3 className="font-hero text-sm uppercase tracking-wider text-foreground">
+                  <MessageCircle className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
+                  <h3 className="font-hero text-sm uppercase tracking-wider text-black">
                     WhatsApp
                   </h3>
                 </div>
@@ -511,11 +524,11 @@ const Contact = () => {
                 href="https://instagram.com/nextmind"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="social-card group relative p-12 border-4 border-white hover:border-foreground transition-all duration-300 bg-background overflow-hidden flex flex-col items-center"
+                className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
               >
                 <div className="relative z-10 flex flex-col items-center">
-                  <Instagram className="w-20 h-20 text-white mb-4" strokeWidth={1.5} />
-                  <h3 className="font-hero text-sm uppercase tracking-wider text-foreground">
+                  <Instagram className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
+                  <h3 className="font-hero text-sm uppercase tracking-wider text-black">
                     Instagram
                   </h3>
                 </div>
@@ -525,8 +538,9 @@ const Contact = () => {
         </section>
       </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </MobileEnhancements>
   );
 };
 

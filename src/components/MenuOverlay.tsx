@@ -94,7 +94,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
             transition: "opacity 0.6s ease 0.6s",
           }}
         >
-          <p>hello@nextmind.agency</p>
+          <a href="mailto:nextmind@gmail.com" className="hover:text-primary transition-colors">nextmind@gmail.com</a>
           <div className="flex gap-6">
             <a href="#" className="hover:text-primary transition-colors">Instagram</a>
             <a href="#" className="hover:text-primary transition-colors">LinkedIn</a>

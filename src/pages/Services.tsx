@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MobileEnhancements from "@/components/MobileEnhancements";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -290,17 +291,18 @@ const Services = () => {
   }, []);
 
   const dots = [
-    { top: '10%', left: '8%', size: 6, delay: 0 },
-    { top: '20%', left: '88%', size: 8, delay: 0.5 },
-    { top: '75%', left: '12%', size: 5, delay: 1 },
-    { top: '85%', left: '82%', size: 7, delay: 1.5 },
-    { top: '40%', left: '5%', size: 9, delay: 0.3 },
-    { top: '60%', left: '92%', size: 6, delay: 0.8 },
+    { top: '10%', left: '8%', size: 6, delay: 0, type: 'orange' },
+    { top: '20%', left: '88%', size: 8, delay: 0.5, type: 'metallic' },
+    { top: '75%', left: '12%', size: 5, delay: 1, type: 'orange' },
+    { top: '85%', left: '82%', size: 7, delay: 1.5, type: 'metallic' },
+    { top: '40%', left: '5%', size: 9, delay: 0.3, type: 'orange' },
+    { top: '60%', left: '92%', size: 6, delay: 0.8, type: 'orange' },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <MobileEnhancements>
+      <div className="min-h-screen bg-background">
+        <Header />
       
       <main className="pt-20">
         <section
@@ -317,16 +319,28 @@ const Services = () => {
                   left: dot.left,
                   width: dot.size,
                   height: dot.size,
-                  background: `radial-gradient(circle at 30% 30%, 
-                    hsl(220, 20%, 90%) 0%, 
-                    hsl(220, 15%, 70%) 40%, 
-                    hsl(220, 10%, 50%) 70%, 
-                    hsl(220, 8%, 30%) 100%)`,
-                  boxShadow: `
-                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-                  `,
+                  background: dot.type === 'orange'
+                    ? `radial-gradient(circle at 30% 30%, 
+                        hsl(30, 100%, 65%) 0%, 
+                        hsl(30, 100%, 55%) 40%, 
+                        hsl(30, 90%, 45%) 70%, 
+                        hsl(30, 80%, 35%) 100%)`
+                    : `radial-gradient(circle at 30% 30%, 
+                        hsl(220, 20%, 90%) 0%, 
+                        hsl(220, 15%, 70%) 40%, 
+                        hsl(220, 10%, 50%) 70%, 
+                        hsl(220, 8%, 30%) 100%)`,
+                  boxShadow: dot.type === 'orange'
+                    ? `
+                      0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4),
+                      inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.3),
+                      inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 180, 100, 0.4)
+                    `
+                    : `
+                      0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
+                      inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
+                      inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
+                    `,
                   animationDelay: `${dot.delay}s`,
                   animationDuration: '3s',
                 }}
@@ -381,7 +395,7 @@ const Services = () => {
               <div className="w-full max-w-6xl">
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                   <div className="order-2 md:order-1">
-                    <div className="text-sm uppercase tracking-widest text-purple-400 mb-4 font-hero">
+                    <div className="text-sm uppercase tracking-widest text-orange-400 mb-4 font-hero">
                       {service.id} / {String(services.length).padStart(2, '0')}
                     </div>
                     <h2 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-6 leading-tight">
@@ -394,7 +408,7 @@ const Services = () => {
                       {service.features.map((feature, i) => (
                         <div
                           key={i}
-                          className="px-4 py-3 border border-foreground/20 text-foreground/70 text-sm uppercase tracking-wider hover:border-purple-500/50 hover:text-purple-300 transition-all duration-300"
+                          className="px-4 py-3 border border-foreground/20 text-foreground/70 text-sm uppercase tracking-wider hover:border-orange-500/50 hover:text-orange-300 transition-all duration-300"
                         >
                           {feature}
                         </div>
@@ -405,7 +419,7 @@ const Services = () => {
                   <div className="order-1 md:order-2">
                     <div className="relative">
                       <div
-                        className="absolute inset-0 bg-purple-500/20 blur-3xl"
+                        className="absolute inset-0 bg-orange-500/20 blur-3xl"
                         style={{
                           transform: 'translate(20px, 20px)',
                         }}
@@ -439,7 +453,7 @@ const Services = () => {
             <div className="relative">
               {/* Center vertical line */}
               <div 
-                className="timeline-line absolute left-1/2 top-0 bottom-0 w-0.5 bg-purple-500/30 origin-top"
+                className="timeline-line absolute left-1/2 top-0 bottom-0 w-0.5 bg-orange-500/30 origin-top"
                 style={{ transform: 'translateX(-50%)' }}
               />
               
@@ -449,14 +463,14 @@ const Services = () => {
                 <div className="timeline-item relative">
                   <div className="flex items-center">
                     <div className="w-1/2 pr-8 md:pr-16" />
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-purple-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
                       01
                     </div>
                     <div className="timeline-box w-1/2 pl-8 md:pl-16">
-                      <div className="relative p-6 md:p-8 border border-purple-500/30 hover:border-purple-500 transition-all duration-300 bg-gradient-to-br from-background to-purple-950/10 backdrop-blur-sm overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-br from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
-                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-purple-400">Strategy</h3>
+                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-orange-400">Strategy</h3>
                           <p className="text-foreground/70 leading-relaxed">
                             We analyze your business goals and create a comprehensive digital strategy that aligns with your vision and drives measurable results.
                           </p>
@@ -470,17 +484,17 @@ const Services = () => {
                 <div className="timeline-item relative">
                   <div className="flex items-center">
                     <div className="timeline-box w-1/2 pr-8 md:pr-16 text-right">
-                      <div className="relative p-6 md:p-8 border border-purple-500/30 hover:border-purple-500 transition-all duration-300 bg-gradient-to-bl from-background to-purple-950/10 backdrop-blur-sm overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-bl from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-bl from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-bl from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
-                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-purple-400">Design</h3>
+                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-orange-400">Design</h3>
                           <p className="text-foreground/70 leading-relaxed">
                             Beautiful, intuitive interfaces that captivate users. We craft experiences that are both visually stunning and functionally superior.
                           </p>
                         </div>
                       </div>
                     </div>
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-purple-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
                       02
                     </div>
                     <div className="w-1/2 pl-8 md:pl-16" />
@@ -491,14 +505,14 @@ const Services = () => {
                 <div className="timeline-item relative">
                   <div className="flex items-center">
                     <div className="w-1/2 pr-8 md:pr-16" />
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-purple-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
                       03
                     </div>
                     <div className="timeline-box w-1/2 pl-8 md:pl-16">
-                      <div className="relative p-6 md:p-8 border border-purple-500/30 hover:border-purple-500 transition-all duration-300 bg-gradient-to-br from-background to-purple-950/10 backdrop-blur-sm overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-br from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
-                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-purple-400">Development</h3>
+                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-orange-400">Development</h3>
                           <p className="text-foreground/70 leading-relaxed">
                             Cutting-edge technology stack and best practices to build scalable, performant solutions that stand the test of time.
                           </p>
@@ -512,17 +526,17 @@ const Services = () => {
                 <div className="timeline-item relative">
                   <div className="flex items-center">
                     <div className="timeline-box w-1/2 pr-8 md:pr-16 text-right">
-                      <div className="relative p-6 md:p-8 border border-purple-500/30 hover:border-purple-500 transition-all duration-300 bg-gradient-to-bl from-background to-purple-950/10 backdrop-blur-sm overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-bl from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-bl from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-bl from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
-                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-purple-400">Deployment</h3>
+                          <h3 className="font-hero text-xl md:text-2xl font-bold uppercase mb-3 text-orange-400">Deployment</h3>
                           <p className="text-foreground/70 leading-relaxed">
                             Seamless launch and continuous optimization to ensure your product performs at its peak and scales with your growth.
                           </p>
                         </div>
                       </div>
                     </div>
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-purple-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
                       04
                     </div>
                     <div className="w-1/2 pl-8 md:pl-16" />
@@ -536,20 +550,73 @@ const Services = () => {
         <section
           ref={ctaSectionRef}
           className="min-h-screen flex items-center justify-center px-6 md:px-12 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #FF8C00 0%, #ff6600 50%, #FF8C00 100%)',
+          }}
         >
+          {/* Mixed dots: orange, black, and metallic on orange background */}
+          {[
+            { top: '8%', left: '6%', size: 7, type: 'black' },
+            { top: '18%', left: '88%', size: 9, type: 'metallic' },
+            { top: '28%', left: '12%', size: 6, type: 'orange' },
+            { top: '40%', left: '90%', size: 8, type: 'black' },
+            { top: '52%', left: '5%', size: 10, type: 'metallic' },
+            { top: '65%', left: '85%', size: 5, type: 'orange' },
+            { top: '75%', left: '15%', size: 7, type: 'black' },
+            { top: '85%', left: '92%', size: 6, type: 'metallic' },
+            { top: '15%', left: '45%', size: 8, type: 'orange' },
+            { top: '60%', left: '50%', size: 9, type: 'black' },
+            { top: '90%', left: '55%', size: 7, type: 'metallic' },
+          ].map((dot, index) => (
+            <div
+              key={index}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                top: dot.top,
+                left: dot.left,
+                width: dot.size,
+                height: dot.size,
+                background: dot.type === 'black'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(0, 0%, 15%) 0%, 
+                      hsl(0, 0%, 10%) 40%, 
+                      hsl(0, 0%, 5%) 70%, 
+                      hsl(0, 0%, 0%) 100%)`
+                  : dot.type === 'orange'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(30, 100%, 70%) 0%, 
+                      hsl(30, 100%, 60%) 40%, 
+                      hsl(30, 90%, 50%) 70%, 
+                      hsl(30, 80%, 40%) 100%)`
+                  : `radial-gradient(circle at 30% 30%, 
+                      hsl(220, 20%, 90%) 0%, 
+                      hsl(220, 15%, 70%) 40%, 
+                      hsl(220, 10%, 50%) 70%, 
+                      hsl(220, 8%, 30%) 100%)`,
+                boxShadow: dot.type === 'black'
+                  ? `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.6)`
+                  : dot.type === 'orange'
+                  ? `0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.5)`
+                  : `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3)`,
+                animationDelay: `${index * 0.2}s`,
+                animationDuration: '3s',
+              }}
+            />
+          ))}
+          
           <div className="text-center relative z-10 max-w-4xl">
             <h2
               ref={ctaTextRef}
-              className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-8 leading-tight"
+              className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-8 leading-tight text-black drop-shadow-lg"
             >
               Ready to Build Something Amazing?
             </h2>
-            <p className="text-lg md:text-xl text-foreground/70 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-black/80 mb-12 max-w-2xl mx-auto font-medium">
               Let's turn your vision into reality. Get in touch with us today and start your digital transformation journey.
             </p>
             <a
               href="/#contact"
-              className="inline-block px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50"
+              className="inline-block px-12 py-5 bg-black hover:bg-black/90 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-full"
             >
               Get Started
             </a>
@@ -557,8 +624,9 @@ const Services = () => {
         </section>
       </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </MobileEnhancements>
   );
 };
 

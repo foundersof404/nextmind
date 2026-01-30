@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MobileEnhancements from "@/components/MobileEnhancements";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,16 +93,16 @@ const capabilities = [
 ];
 
 const metallicDots = [
-  { top: '15%', left: '10%', size: 8, delay: 0 },
-  { top: '25%', left: '85%', size: 6, delay: 0.5 },
-  { top: '70%', left: '15%', size: 10, delay: 1 },
-  { top: '80%', left: '80%', size: 5, delay: 1.5 },
-  { top: '40%', left: '5%', size: 7, delay: 0.3 },
-  { top: '60%', left: '92%', size: 9, delay: 0.8 },
-  { top: '10%', left: '60%', size: 4, delay: 1.2 },
-  { top: '85%', left: '40%', size: 6, delay: 0.6 },
-  { top: '35%', left: '95%', size: 8, delay: 1.8 },
-  { top: '55%', left: '8%', size: 5, delay: 0.2 },
+  { top: '15%', left: '10%', size: 8, delay: 0, type: 'orange' },
+  { top: '25%', left: '85%', size: 6, delay: 0.5, type: 'metallic' },
+  { top: '70%', left: '15%', size: 10, delay: 1, type: 'orange' },
+  { top: '80%', left: '80%', size: 5, delay: 1.5, type: 'metallic' },
+  { top: '40%', left: '5%', size: 7, delay: 0.3, type: 'orange' },
+  { top: '60%', left: '92%', size: 9, delay: 0.8, type: 'metallic' },
+  { top: '10%', left: '60%', size: 4, delay: 1.2, type: 'metallic' },
+  { top: '85%', left: '40%', size: 6, delay: 0.6, type: 'orange' },
+  { top: '35%', left: '95%', size: 8, delay: 1.8, type: 'metallic' },
+  { top: '55%', left: '8%', size: 5, delay: 0.2, type: 'orange' },
 ];
 
 const Work = () => {
@@ -292,8 +293,9 @@ const Work = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <MobileEnhancements>
+      <div className="min-h-screen bg-background">
+        <Header />
 
       <main className="pt-20">
         {/* Hero Section with Text */}
@@ -343,16 +345,28 @@ const Work = () => {
                 left: dot.left,
                 width: dot.size,
                 height: dot.size,
-                background: `radial-gradient(circle at 30% 30%, 
-                  hsl(220, 20%, 90%) 0%, 
-                  hsl(220, 15%, 70%) 40%, 
-                  hsl(220, 10%, 50%) 70%, 
-                  hsl(220, 8%, 30%) 100%)`,
-                boxShadow: `
-                  0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-                  inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-                  inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-                `,
+                background: dot.type === 'orange'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(30, 100%, 65%) 0%, 
+                      hsl(30, 100%, 55%) 40%, 
+                      hsl(30, 90%, 45%) 70%, 
+                      hsl(30, 80%, 35%) 100%)`
+                  : `radial-gradient(circle at 30% 30%, 
+                      hsl(220, 20%, 90%) 0%, 
+                      hsl(220, 15%, 70%) 40%, 
+                      hsl(220, 10%, 50%) 70%, 
+                      hsl(220, 8%, 30%) 100%)`,
+                boxShadow: dot.type === 'orange'
+                  ? `
+                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4),
+                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.3),
+                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 180, 100, 0.4)
+                  `
+                  : `
+                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
+                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
+                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
+                  `,
                 animationDelay: `${dot.delay}s`,
                 animationDuration: '3s',
               }}
@@ -480,7 +494,7 @@ const Work = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p className="text-xs uppercase tracking-widest text-purple-400 mb-1">
+                    <p className="text-xs uppercase tracking-widest text-orange-400 mb-1">
                       {project.type}
                     </p>
                     <h3 className="font-hero text-lg font-bold uppercase text-white">
@@ -494,18 +508,52 @@ const Work = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="min-h-screen flex items-center justify-center px-6 md:px-12 relative overflow-hidden">
+        {/* CTA Section - Orange Background */}
+        <section 
+          className="min-h-screen flex items-center justify-center px-6 md:px-12 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #FF8C00 0%, #ff6600 50%, #FF8C00 100%)',
+          }}
+        >
+          {/* Dark dots on orange background */}
+          {[
+            { top: '10%', left: '5%', size: 8 },
+            { top: '20%', left: '90%', size: 6 },
+            { top: '80%', left: '10%', size: 10 },
+            { top: '85%', left: '85%', size: 7 },
+            { top: '45%', left: '8%', size: 9 },
+            { top: '60%', left: '95%', size: 5 },
+          ].map((dot, index) => (
+            <div
+              key={index}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                top: dot.top,
+                left: dot.left,
+                width: dot.size,
+                height: dot.size,
+                background: `radial-gradient(circle at 30% 30%, 
+                  hsl(0, 0%, 15%) 0%, 
+                  hsl(0, 0%, 10%) 40%, 
+                  hsl(0, 0%, 5%) 70%, 
+                  hsl(0, 0%, 0%) 100%)`,
+                boxShadow: `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.6)`,
+                animationDuration: '3s',
+                animationDelay: `${index * 0.3}s`,
+              }}
+            />
+          ))}
+          
           <div className="text-center relative z-10 max-w-4xl">
-            <h2 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-8 leading-tight">
+            <h2 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-8 leading-tight text-black drop-shadow-lg">
               Let's Create Something Extraordinary
             </h2>
-            <p className="text-lg md:text-xl text-foreground/70 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-black/80 mb-12 max-w-2xl mx-auto font-medium">
               Ready to bring your vision to life? Let's collaborate and build the future together.
             </p>
             <a
               href="/#contact"
-              className="inline-block px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50"
+              className="inline-block px-12 py-5 bg-black hover:bg-black/90 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-full"
             >
               Start a Project
             </a>
@@ -513,8 +561,9 @@ const Work = () => {
         </section>
       </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </MobileEnhancements>
   );
 };
 

@@ -2,108 +2,100 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Logo from "@/assets/NextMindLogo.png";
+import { Mail, Phone, MapPin, Instagram, Linkedin, Twitter, ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
-  const logoRef = useRef<HTMLImageElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
-  const emailRef = useRef<HTMLAnchorElement>(null);
-  const phoneRef = useRef<HTMLAnchorElement>(null);
-  const yearRef = useRef<HTMLDivElement>(null);
+  const topSectionRef = useRef<HTMLDivElement>(null);
+  const columnsRef = useRef<HTMLDivElement[]>([]);
+  const particleContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const footer = footerRef.current;
-    const logo = logoRef.current;
-    const contact = contactRef.current;
-    const email = emailRef.current;
-    const phone = phoneRef.current;
-    const year = yearRef.current;
+    const topSection = topSectionRef.current;
+    const columns = columnsRef.current.filter(Boolean);
+    const particleContainer = particleContainerRef.current;
 
     if (!footer) return;
 
-    // Animate logo
-    if (logo) {
-      gsap.from(logo, {
+    // Animate top section
+    if (topSection) {
+      gsap.from(topSection, {
         opacity: 0,
-        y: -30,
+        y: 50,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: footer,
-          start: "top 90%",
-          end: "top 70%",
-          scrub: 1,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
         },
       });
     }
 
-    // Animate contact section
-    if (contact) {
-      gsap.from(contact, {
+    // Stagger animate columns
+    if (columns.length > 0) {
+      gsap.from(columns, {
         opacity: 0,
         y: 30,
-        duration: 1,
-        delay: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: footer,
-          start: "top 90%",
-          end: "top 70%",
-          scrub: 1,
-        },
-      });
-    }
-
-    // Stagger animation for contact items
-    if (email) {
-      gsap.from(email, {
-        opacity: 0,
-        x: -20,
+        stagger: 0.15,
         duration: 0.8,
-        delay: 0.4,
-        ease: "power3.out",
+        ease: "power2.out",
         scrollTrigger: {
           trigger: footer,
-          start: "top 90%",
-          end: "top 70%",
-          scrub: 1,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
         },
       });
     }
 
-    if (phone) {
-      gsap.from(phone, {
-        opacity: 0,
-        x: -20,
-        duration: 0.8,
-        delay: 0.5,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: footer,
-          start: "top 90%",
-          end: "top 70%",
-          scrub: 1,
-        },
-      });
-    }
-
-    // Animate year
-    if (year) {
-      gsap.from(year, {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        delay: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: footer,
-          start: "top 90%",
-          end: "top 70%",
-          scrub: 1,
-        },
-      });
+    // Create gooey particles using DocumentFragment for better performance
+    if (particleContainer) {
+      const isMobile = window.innerWidth < 768;
+      const particleCount = isMobile ? 40 : 120; // Fewer particles on mobile
+      const fragment = document.createDocumentFragment();
+      
+      for (let i = 0; i < particleCount; i++) {
+        const span = document.createElement("span");
+        
+        // Randomly choose animation type: float-up, float-diagonal, or float-wave
+        const animationType = Math.random();
+        if (animationType < 0.4) {
+          span.classList.add("particle-up");
+        } else if (animationType < 0.7) {
+          span.classList.add("particle-diagonal");
+        } else {
+          span.classList.add("particle-wave");
+        }
+        
+        const size = isMobile 
+          ? 1.5 + Math.random() * 3 // 1.5-4.5rem (smaller on mobile)
+          : 2.5 + Math.random() * 6; // 2.5-8.5rem (bigger on desktop)
+        const distance = isMobile
+          ? 6 + Math.random() * 10 // 6-16rem (less distance on mobile)
+          : 8 + Math.random() * 15; // 8-23rem
+        const position = Math.random() * 100; // 0-100%
+        const horizontalMove = isMobile
+          ? -20 + Math.random() * 40 // -20 to 20 (less horizontal on mobile)
+          : -40 + Math.random() * 80; // -40 to 40 (more horizontal on desktop)
+        const time = isMobile
+          ? 8 + Math.random() * 10 // 8-18s (slower on mobile)
+          : 5 + Math.random() * 7; // 5-12s (variety on desktop)
+        const delay = -1 * (Math.random() * 25); // More spread out
+        
+        span.style.setProperty("--dim", `${size}rem`);
+        span.style.setProperty("--uplift", `${distance}rem`);
+        span.style.setProperty("--pos-x", `${position}%`);
+        span.style.setProperty("--horizontal", `${horizontalMove}%`);
+        span.style.setProperty("--dur", `${time}s`);
+        span.style.setProperty("--delay", `${delay}s`);
+        
+        fragment.appendChild(span);
+      }
+      
+      particleContainer.appendChild(fragment);
     }
 
     return () => {
@@ -117,96 +109,330 @@ const Footer = () => {
 
   const currentYear = new Date().getFullYear();
 
-  const dots = [
-    { top: '10%', left: '5%', size: 6, delay: 0 },
-    { top: '20%', left: '90%', size: 8, delay: 0.5 },
-    { top: '80%', left: '10%', size: 5, delay: 1 },
-    { top: '85%', left: '85%', size: 7, delay: 1.5 },
-    { top: '50%', left: '3%', size: 4, delay: 0.3 },
-    { top: '60%', left: '95%', size: 6, delay: 0.8 },
+  const quickLinks = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Services", href: "/services" },
+    { name: "Work", href: "/work" },
+    { name: "Contact", href: "/contact" },
+  ];
+
+  const services = [
+    "Web Development",
+    "Mobile Apps",
+    "AI Integration",
+    "UI/UX Design",
+    "Branding",
+  ];
+
+  const socialLinks = [
+    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
   ];
 
   return (
-    <footer
-      ref={footerRef}
-      className="relative min-h-[50vh] flex flex-col items-center justify-center px-6 md:px-12 py-8 md:py-16 bg-background overflow-hidden border-t border-border/30"
-    >
-      {/* Metallic 3D dots */}
-      {dots.map((dot, index) => (
+    <>
+      {/* SVG Filter for Gooey Effect */}
+      <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="liquid-effect">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur" />
+            <feColorMatrix 
+              in="blur" 
+              mode="matrix" 
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" 
+              result="liquid" 
+            />
+          </filter>
+        </defs>
+      </svg>
+
+      <style>{`
+        .particle-up,
+        .particle-diagonal,
+        .particle-wave {
+          position: absolute;
+          background: #FF8C00;
+          border-radius: 50%;
+          top: 50%;
+          left: var(--pos-x, 50%);
+          width: var(--dim, 5rem);
+          height: var(--dim, 5rem);
+          transform: translate(-50%, -50%);
+          animation-delay: var(--delay, 0s);
+          opacity: 0.95;
+        }
+
+        .particle-up {
+          animation: float-up var(--dur, 8s) ease-in-out infinite;
+        }
+
+        .particle-diagonal {
+          animation: float-diagonal var(--dur, 8s) ease-in-out infinite;
+        }
+
+        .particle-wave {
+          animation: float-wave var(--dur, 10s) ease-in-out infinite;
+        }
+
+        /* Straight up animation */
+        @keyframes float-up {
+          0% {
+            top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.85;
+          }
+          30% {
+            opacity: 1;
+          }
+          70% {
+            opacity: 0.9;
+          }
+          100% {
+            top: calc(var(--uplift) * -1);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+          }
+        }
+
+        /* Diagonal floating animation */
+        @keyframes float-diagonal {
+          0% {
+            top: 50%;
+            left: var(--pos-x);
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.85;
+          }
+          30% {
+            opacity: 1;
+          }
+          70% {
+            opacity: 0.9;
+          }
+          100% {
+            top: calc(var(--uplift) * -1);
+            left: calc(var(--pos-x) + var(--horizontal));
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+          }
+        }
+
+        /* Wave-like floating animation */
+        @keyframes float-wave {
+          0% {
+            top: 50%;
+            left: var(--pos-x);
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.85;
+          }
+          20% {
+            left: calc(var(--pos-x) + var(--horizontal) * 0.3);
+            opacity: 1;
+          }
+          40% {
+            left: calc(var(--pos-x) + var(--horizontal) * 0.7);
+          }
+          60% {
+            left: calc(var(--pos-x) + var(--horizontal) * 0.5);
+            opacity: 0.9;
+          }
+          80% {
+            left: calc(var(--pos-x) + var(--horizontal) * 0.2);
+          }
+          100% {
+            top: calc(var(--uplift) * -1);
+            left: var(--pos-x);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+          }
+        }
+      `}</style>
+
+      <footer ref={footerRef} className="relative w-full" style={{ marginTop: '8rem' }}>
+        {/* Top Section - Black Background (Logo + CTA) */}
         <div
-          key={index}
-          className="absolute rounded-full animate-pulse"
-          style={{
-            top: dot.top,
-            left: dot.left,
-            width: dot.size,
-            height: dot.size,
-            background: `radial-gradient(circle at 30% 30%, 
-              hsl(220, 20%, 90%) 0%, 
-              hsl(220, 15%, 70%) 40%, 
-              hsl(220, 10%, 50%) 70%, 
-              hsl(220, 8%, 30%) 100%)`,
-            boxShadow: `
-              0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-              inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-              inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-            `,
-            animationDelay: `${dot.delay}s`,
-            animationDuration: '3s',
-          }}
-        />
-      ))}
+          ref={topSectionRef}
+          className="bg-black py-8 md:py-24 px-6 md:px-12"
+        >
+          <div className="container mx-auto flex flex-col items-center justify-center gap-8 md:flex-row md:justify-between">
+            {/* Logo - Centered on mobile, left on desktop */}
+            <div className="flex flex-col items-center gap-6 w-full md:w-auto">
+              <div className="flex items-center gap-4">
+                <img
+                  src={Logo}
+                  alt="Next Mind"
+                  className="h-10 md:h-14 w-auto object-contain"
+                />
+                <span className="font-hero text-xl md:text-3xl font-bold uppercase tracking-wider text-white">
+                  ɴᴇxᴛᴍɪɴᴅ
+                </span>
+              </div>
+            </div>
 
-      {/* Logo */}
-      <div className="relative z-10 mb-6 md:mb-12">
-        <img
-          ref={logoRef}
-          src={Logo}
-          alt="Next Mind"
-          className="h-12 md:h-16 lg:h-20 w-auto object-contain"
-        />
-      </div>
-
-      {/* Contact Us Section */}
-      <div ref={contactRef} className="relative z-10 text-center mb-6 md:mb-12">
-        <h3 className="font-hero text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-foreground mb-8 tracking-tight">
-          Contact Us
-        </h3>
-        
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-          {/* Email */}
-          <a
-            ref={emailRef}
-            href="mailto:nextmind.wiz@gmail.com"
-            className="group flex items-center gap-3 text-foreground/80 hover:text-foreground transition-all duration-300"
-          >
-            <span className="font-serif text-lg md:text-xl">Email:</span>
-            <span className="font-hero text-base md:text-lg uppercase tracking-wide border-b border-transparent group-hover:border-foreground/50 transition-all duration-300">
-              nextmind.wiz@gmail.com
-            </span>
-          </a>
-
-          {/* Phone */}
-          <a
-            ref={phoneRef}
-            href="tel:+1234567890"
-            className="group flex items-center gap-3 text-foreground/80 hover:text-foreground transition-all duration-300"
-          >
-            <span className="font-serif text-lg md:text-xl">Phone:</span>
-            <span className="font-hero text-base md:text-lg uppercase tracking-wide border-b border-transparent group-hover:border-foreground/50 transition-all duration-300">
-              +1 (234) 567-890
-            </span>
-          </a>
+            {/* CTA - Full width on mobile, right on desktop */}
+            <div className="text-center md:text-right w-full md:w-auto">
+              <p className="text-white/80 mb-4 text-base md:text-lg font-medium">Ready to build something amazing?</p>
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-full group w-full md:w-auto"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Year */}
-      <div ref={yearRef} className="relative z-10">
-        <p className="font-hero text-sm md:text-base uppercase tracking-widest text-foreground/50">
-          © {currentYear} Next Mind Agency. All rights reserved.
-        </p>
-      </div>
-    </footer>
+        {/* Bottom Section - Orange Background with Gooey Effect */}
+        <div className="relative" style={{ background: '#FF8C00', minHeight: '250px', paddingBottom: '2rem' }}>
+          {/* Gooey Animations Container */}
+          <div
+            ref={particleContainerRef}
+            className="gooey-animations"
+            style={{
+              position: 'absolute',
+              top: 0,
+              width: '120%',
+              left: '-10%',
+              height: '8rem',
+              background: '#FF8C00',
+              transform: 'translateY(-99%)',
+              zIndex: 0,
+              filter: 'url(#liquid-effect)',
+              overflow: 'visible',
+              pointerEvents: 'none',
+            }}
+          >
+            {/* Particles will be dynamically created */}
+          </div>
+
+          {/* Footer Content */}
+          <div className="container mx-auto px-6 md:px-12 py-10 md:py-16 relative z-10">
+            {/* Footer Columns - Stacked on mobile, grid on desktop */}
+            <div className="flex flex-col gap-10 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-12 mb-12 md:mb-16">
+              {/* Column 1 - About */}
+              <div ref={(el) => { if (el) columnsRef.current[0] = el; }} className="text-center md:text-left">
+                <h4 className="font-hero text-lg md:text-xl font-bold uppercase text-black mb-4 md:mb-6 tracking-wider">
+                  About Us
+                </h4>
+                <p className="text-black/80 leading-relaxed mb-4 text-sm md:text-base">
+                  We craft digital experiences that inspire, engage, and drive results. Your vision, our expertise.
+                </p>
+                <div className="flex gap-4 justify-center md:justify-start">
+                  {socialLinks.map((social, index) => {
+                    const Icon = social.icon;
+                    return (
+                      <a
+                        key={index}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full bg-black/10 border border-black/30 flex items-center justify-center text-black hover:bg-black hover:text-white hover:scale-110 transition-all duration-300"
+                        aria-label={social.label}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Column 2 - Quick Links */}
+              <div ref={(el) => { if (el) columnsRef.current[1] = el; }} className="text-center md:text-left">
+                <h4 className="font-hero text-lg md:text-xl font-bold uppercase text-black mb-4 md:mb-6 tracking-wider">
+                  Quick Links
+                </h4>
+                <ul className="space-y-2 md:space-y-3">
+                  {quickLinks.map((link, index) => (
+                    <li key={index}>
+                      <a
+                        href={link.href}
+                        className="text-black/80 hover:text-black inline-block transition-all duration-300 group text-sm md:text-base md:hover:translate-x-2"
+                      >
+                        <span className="hidden md:inline-block mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                        {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Column 3 - Services */}
+              <div ref={(el) => { if (el) columnsRef.current[2] = el; }} className="text-center md:text-left">
+                <h4 className="font-hero text-lg md:text-xl font-bold uppercase text-black mb-4 md:mb-6 tracking-wider">
+                  Services
+                </h4>
+                <ul className="space-y-2 md:space-y-3">
+                  {services.map((service, index) => (
+                    <li key={index} className="text-black/80 flex items-center justify-center md:justify-start gap-2 text-sm md:text-base">
+                      <span className="w-1.5 h-1.5 bg-black rounded-full"></span>
+                      {service}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Column 4 - Contact Info */}
+              <div ref={(el) => { if (el) columnsRef.current[3] = el; }} className="text-center md:text-left">
+                <h4 className="font-hero text-lg md:text-xl font-bold uppercase text-black mb-4 md:mb-6 tracking-wider">
+                  Contact
+                </h4>
+                <ul className="space-y-3 md:space-y-4">
+                  <li>
+                    <a
+                      href="mailto:nextmind@gmail.com"
+                      className="flex items-start justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
+                    >
+                      <Mail className="w-5 h-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm break-all">nextmind@gmail.com</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="tel:+96176764263"
+                      className="flex items-center justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
+                    >
+                      <Phone className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm">+961 76 764 263</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="tel:+96181939088"
+                      className="flex items-center justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
+                    >
+                      <Phone className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                      <span className="text-sm">+961 81 939 088</span>
+                    </a>
+                  </li>
+                  <li className="flex items-start justify-center md:justify-start gap-3 text-black/80">
+                    <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">Remotely — work from anywhere, anytime</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Bottom Bar */}
+            <div className="pt-6 md:pt-8 border-t border-black/20 flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
+              <p className="font-hero text-xs md:text-sm uppercase tracking-wider text-black/70 text-center">
+                © {currentYear} Next Mind Agency. All rights reserved.
+              </p>
+              <div className="flex gap-4 md:gap-6 text-xs md:text-sm text-black/70">
+                <a href="/privacy" className="hover:text-black transition-colors">
+                  Privacy Policy
+                </a>
+                <span>•</span>
+                <a href="/terms" className="hover:text-black transition-colors">
+                  Terms of Service
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 };
 

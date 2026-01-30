@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MobileEnhancements from "@/components/MobileEnhancements";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -184,28 +185,29 @@ const About = () => {
   }, []);
 
   const metallicDots = [
-    { top: '15%', left: '10%', size: 8, delay: 0 },
-    { top: '25%', left: '85%', size: 6, delay: 0.5 },
-    { top: '70%', left: '15%', size: 10, delay: 1 },
-    { top: '80%', left: '80%', size: 5, delay: 1.5 },
-    { top: '40%', left: '5%', size: 7, delay: 0.3 },
-    { top: '60%', left: '92%', size: 9, delay: 0.8 },
-    { top: '10%', left: '60%', size: 4, delay: 1.2 },
-    { top: '85%', left: '40%', size: 6, delay: 0.6 },
-    { top: '35%', left: '95%', size: 8, delay: 1.8 },
-    { top: '55%', left: '8%', size: 5, delay: 0.2 },
-    { top: '20%', left: '50%', size: 7, delay: 0.9 },
-    { top: '65%', left: '70%', size: 9, delay: 1.3 },
-    { top: '45%', left: '25%', size: 6, delay: 0.7 },
-    { top: '90%', left: '60%', size: 8, delay: 1.6 },
-    { top: '5%', left: '35%', size: 5, delay: 0.4 },
+    { top: '15%', left: '10%', size: 8, delay: 0, type: 'orange' },
+    { top: '25%', left: '85%', size: 6, delay: 0.5, type: 'metallic' },
+    { top: '70%', left: '15%', size: 10, delay: 1, type: 'orange' },
+    { top: '80%', left: '80%', size: 5, delay: 1.5, type: 'metallic' },
+    { top: '40%', left: '5%', size: 7, delay: 0.3, type: 'orange' },
+    { top: '60%', left: '92%', size: 9, delay: 0.8, type: 'metallic' },
+    { top: '10%', left: '60%', size: 4, delay: 1.2, type: 'metallic' },
+    { top: '85%', left: '40%', size: 6, delay: 0.6, type: 'orange' },
+    { top: '35%', left: '95%', size: 8, delay: 1.8, type: 'metallic' },
+    { top: '55%', left: '8%', size: 5, delay: 0.2, type: 'orange' },
+    { top: '20%', left: '50%', size: 7, delay: 0.9, type: 'metallic' },
+    { top: '65%', left: '70%', size: 9, delay: 1.3, type: 'orange' },
+    { top: '45%', left: '25%', size: 6, delay: 0.7, type: 'metallic' },
+    { top: '90%', left: '60%', size: 8, delay: 1.6, type: 'orange' },
+    { top: '5%', left: '35%', size: 5, delay: 0.4, type: 'metallic' },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <MobileEnhancements>
+      <div className="min-h-screen bg-background">
+        <Header />
 
-      <main className="pt-20">
+        <main className="pt-20">
         <section
           ref={heroSectionRef}
           className="h-screen flex items-center justify-center relative overflow-hidden bg-background"
@@ -219,16 +221,28 @@ const About = () => {
                 left: dot.left,
                 width: dot.size,
                 height: dot.size,
-                background: `radial-gradient(circle at 30% 30%, 
-                  hsl(220, 20%, 90%) 0%, 
-                  hsl(220, 15%, 70%) 40%, 
-                  hsl(220, 10%, 50%) 70%, 
-                  hsl(220, 8%, 30%) 100%)`,
-                boxShadow: `
-                  0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-                  inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-                  inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-                `,
+                background: dot.type === 'orange'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(30, 100%, 65%) 0%, 
+                      hsl(30, 100%, 55%) 40%, 
+                      hsl(30, 90%, 45%) 70%, 
+                      hsl(30, 80%, 35%) 100%)`
+                  : `radial-gradient(circle at 30% 30%, 
+                      hsl(220, 20%, 90%) 0%, 
+                      hsl(220, 15%, 70%) 40%, 
+                      hsl(220, 10%, 50%) 70%, 
+                      hsl(220, 8%, 30%) 100%)`,
+                boxShadow: dot.type === 'orange'
+                  ? `
+                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4),
+                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.3),
+                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 180, 100, 0.4)
+                  `
+                  : `
+                    0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
+                    inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
+                    inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
+                  `,
                 animationDelay: `${dot.delay}s`,
                 animationDuration: '3s',
               }}
@@ -326,7 +340,7 @@ const About = () => {
               return (
                 <div
                   key={index}
-                  className="value-tape absolute bg-white flex items-center justify-center px-4 md:px-8"
+                  className="value-tape absolute bg-orange-600 flex items-center justify-center px-4 md:px-8"
                   style={{
                     height: '3cm',
                     width: '120%',
@@ -337,12 +351,12 @@ const About = () => {
                   }}
                 >
                   {/* Mobile text - shorter */}
-                  <p className="md:hidden font-hero text-[10px] sm:text-xs uppercase tracking-wide text-black text-center leading-tight px-2">
+                  <p className="md:hidden font-hero text-[10px] sm:text-xs uppercase tracking-wide text-white text-center leading-tight px-2">
                     {mobileDescriptions[index]}
                   </p>
                   
                   {/* Desktop text - full description */}
-                  <p className="hidden md:block font-hero text-base lg:text-xl uppercase tracking-wider text-black text-center leading-tight">
+                  <p className="hidden md:block font-hero text-base lg:text-xl uppercase tracking-wider text-white text-center leading-tight">
                     {value.description}
                   </p>
                 </div>
@@ -351,8 +365,27 @@ const About = () => {
           </div>
         </section>
 
-        <section className="min-h-screen flex items-center justify-center px-6 md:px-12 relative overflow-hidden bg-gradient-to-b from-background to-background/50">
-          {metallicDots.map((dot, index) => (
+        <section 
+          className="min-h-screen flex items-center justify-center px-6 md:px-12 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, #FF8C00 0%, #ff6600 50%, #FF8C00 100%)',
+          }}
+        >
+          {/* Mixed dots: orange, black, and metallic on orange background */}
+          {[
+            { top: '10%', left: '5%', size: 8, type: 'black' },
+            { top: '15%', left: '90%', size: 6, type: 'metallic' },
+            { top: '25%', left: '15%', size: 10, type: 'orange' },
+            { top: '35%', left: '85%', size: 7, type: 'black' },
+            { top: '45%', left: '8%', size: 9, type: 'metallic' },
+            { top: '55%', left: '92%', size: 5, type: 'orange' },
+            { top: '65%', left: '12%', size: 6, type: 'black' },
+            { top: '75%', left: '88%', size: 8, type: 'metallic' },
+            { top: '85%', left: '20%', size: 7, type: 'orange' },
+            { top: '20%', left: '50%', size: 5, type: 'black' },
+            { top: '70%', left: '45%', size: 9, type: 'metallic' },
+            { top: '90%', left: '60%', size: 6, type: 'orange' },
+          ].map((dot, index) => (
             <div
               key={`work-${index}`}
               className="absolute rounded-full animate-pulse"
@@ -361,63 +394,74 @@ const About = () => {
                 left: dot.left,
                 width: dot.size,
                 height: dot.size,
-                background: `radial-gradient(circle at 30% 30%, 
-                  hsl(220, 20%, 90%) 0%, 
-                  hsl(220, 15%, 70%) 40%, 
-                  hsl(220, 10%, 50%) 70%, 
-                  hsl(220, 8%, 30%) 100%)`,
-                boxShadow: `
-                  0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3),
-                  inset 0 -${dot.size / 4}px ${dot.size / 3}px rgba(0, 0, 0, 0.2),
-                  inset 0 ${dot.size / 4}px ${dot.size / 3}px rgba(255, 255, 255, 0.3)
-                `,
-                animationDelay: `${dot.delay}s`,
+                background: dot.type === 'black'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(0, 0%, 15%) 0%, 
+                      hsl(0, 0%, 10%) 40%, 
+                      hsl(0, 0%, 5%) 70%, 
+                      hsl(0, 0%, 0%) 100%)`
+                  : dot.type === 'orange'
+                  ? `radial-gradient(circle at 30% 30%, 
+                      hsl(30, 100%, 70%) 0%, 
+                      hsl(30, 100%, 60%) 40%, 
+                      hsl(30, 90%, 50%) 70%, 
+                      hsl(30, 80%, 40%) 100%)`
+                  : `radial-gradient(circle at 30% 30%, 
+                      hsl(220, 20%, 90%) 0%, 
+                      hsl(220, 15%, 70%) 40%, 
+                      hsl(220, 10%, 50%) 70%, 
+                      hsl(220, 8%, 30%) 100%)`,
+                boxShadow: dot.type === 'black'
+                  ? `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.6)`
+                  : dot.type === 'orange'
+                  ? `0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.5)`
+                  : `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3)`,
+                animationDelay: `${index * 0.2}s`,
                 animationDuration: '3s',
               }}
             />
           ))}
           <div className="text-center relative z-10 max-w-5xl">
             <div className="mb-12">
-              <h2 className="font-hero text-5xl md:text-7xl lg:text-8xl font-bold uppercase mb-6 leading-tight tracking-tight">
+              <h2 className="font-hero text-5xl md:text-7xl lg:text-8xl font-bold uppercase mb-6 leading-tight tracking-tight text-black drop-shadow-lg">
                 Let's Work
                 <br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/80 to-foreground">
+                <span className="text-black">
                   Together
                 </span>
               </h2>
             </div>
             
-            <p className="text-xl md:text-2xl text-foreground/80 mb-16 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-black/80 mb-16 max-w-3xl mx-auto leading-relaxed font-medium">
               Ready to start your next project? We'd love to hear from you and discuss how we can help bring your vision to life.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <a
                 href="/contact"
-                className="group relative inline-block px-12 py-5 bg-foreground text-background font-hero uppercase tracking-wider text-base transition-all duration-300 hover:scale-105 overflow-hidden"
+                className="group relative inline-block px-12 py-5 bg-black hover:bg-black/90 text-white font-hero uppercase tracking-wider text-base transition-all duration-300 hover:scale-105 overflow-hidden rounded-full"
               >
                 <span className="relative z-10">Get In Touch</span>
-                <div className="absolute inset-0 bg-foreground/80 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </a>
               
               <div className="flex gap-4">
                 <a
-                  href="mailto:hello@nextmind.com"
-                  className="w-12 h-12 border-2 border-foreground/30 hover:border-foreground flex items-center justify-center transition-all duration-300 hover:scale-110"
+                  href="mailto:nextmind@gmail.com"
+                  className="w-12 h-12 border-2 border-black hover:border-white hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110 rounded-full"
                   aria-label="Email"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </a>
                 <a
-                  href="https://wa.me/15551234567"
+                  href="https://wa.me/96176764263"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 border-2 border-foreground/30 hover:border-foreground flex items-center justify-center transition-all duration-300 hover:scale-110"
+                  className="w-12 h-12 border-2 border-black hover:border-white hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110 rounded-full"
                   aria-label="WhatsApp"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </a>
@@ -425,10 +469,11 @@ const About = () => {
             </div>
           </div>
         </section>
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </MobileEnhancements>
   );
 };
 
