@@ -158,7 +158,7 @@ const SocialMediaSection = () => {
             href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative w-full md:w-auto"
+            className="hover-zoom-laptop group relative w-full md:w-auto"
           >
             {/* Mobile: Card layout with icon and name */}
             <div className="md:hidden flex items-center gap-4 bg-black/20 border border-orange-500/20 rounded-2xl p-4 backdrop-blur-sm transition-all duration-300 hover:bg-orange-500/10 hover:border-orange-500/50 hover:scale-105">

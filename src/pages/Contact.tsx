@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
+import { motion } from "framer-motion";
+import { useSpring, animated } from "@react-spring/web";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileEnhancements from "@/components/MobileEnhancements";
+import { MobileAnimatedSection, MobileAnimatedCard } from "@/components/MobileAnimatedSection";
+import MobileTextWithPopImages from "@/components/MobileTextWithPopImages";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,6 +108,60 @@ const Contact = () => {
     const infoCards = infoCardsRef.current;
 
     if (!heroText || !heroSection) return;
+
+    const isMobile = window.innerWidth < 768;
+
+    // Mobile: GSAP - form elements from left/right, cards stack, text effects
+    if (isMobile) {
+      if (form) {
+        const formElements = form.querySelectorAll('.form-element');
+        formElements.forEach((el, index) => {
+          const fromX = index % 2 === 0 ? -60 : 60;
+          gsap.from(el, {
+            opacity: 0,
+            x: fromX,
+            y: 30,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%" },
+            delay: index * 0.1,
+          });
+        });
+      }
+      if (infoCards) {
+        const cards = infoCards.querySelectorAll('.social-card');
+        cards.forEach((card, index) => {
+          const fromX = index === 0 ? -80 : index === 1 ? 0 : 80;
+          const fromY = index === 1 ? 60 : 0;
+          gsap.from(card, {
+            opacity: 0,
+            x: fromX,
+            y: fromY,
+            scale: 0.85,
+            duration: 0.85,
+            ease: "back.out(1.4)",
+            scrollTrigger: { trigger: card, start: "top 85%" },
+            delay: index * 0.15,
+          });
+        });
+      }
+      // Mobile scroll zoom - sections zoom in/out as they scroll
+      const zoomSections = document.querySelectorAll('section');
+      zoomSections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          onUpdate: (self) => {
+            const p = self.progress;
+            const scale = p < 0.3 ? 0.97 + (p / 0.3) * 0.04 : p < 0.7 ? 1.01 : 1.01 - ((p - 0.7) / 0.3) * 0.04;
+            gsap.set(section, { scale, transformOrigin: "center center" });
+          },
+        });
+      });
+      return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    }
 
     const textContent = heroText.textContent || "";
     heroText.textContent = "";
@@ -208,7 +266,7 @@ const Contact = () => {
       <main className="pt-20">
         <section
           ref={heroSectionRef}
-          className="h-screen flex items-center justify-center relative overflow-hidden bg-background"
+          className="min-h-screen md:h-screen flex items-start md:items-center justify-start md:justify-center pt-24 md:pt-0 px-6 md:px-12 relative overflow-hidden bg-background"
         >
           {metallicDots.map((dot, index) => (
             <div
@@ -247,7 +305,30 @@ const Contact = () => {
             />
           ))}
 
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
+          {/* Mobile: Stacked hero with Framer Motion */}
+          <div className="md:hidden w-full relative z-50 space-y-4 pb-12">
+            <MobileAnimatedSection animation="slideFromTop" delay={0}>
+              <h1 className="font-hero text-5xl font-bold uppercase leading-tight text-foreground" style={{ textShadow: '0 4px 12px rgba(255, 140, 0, 0.3)' }}>
+                CONTACT US
+              </h1>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromLeft" delay={1}>
+              <p className="text-white text-lg leading-relaxed" style={{ wordSpacing: '0.2em' }}>
+                Ready to build something amazing? We'd love to hear from you.
+              </p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromRight" delay={2}>
+              <p className="text-orange-500 font-semibold">Get in touch. Let's create together.</p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="scaleUp" delay={3}>
+              <a href="#contact-form" className="inline-block px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-hero uppercase tracking-wider text-sm rounded-full transition-all">
+                Send Message
+              </a>
+            </MobileAnimatedSection>
+          </div>
+
+          {/* Desktop: Centered hero */}
+          <div className="absolute inset-0 hidden md:flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
             <h1
               ref={heroTextRef}
               className="font-hero text-[20vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-center"
@@ -266,6 +347,7 @@ const Contact = () => {
 
 
         <section
+          id="contact-form"
           ref={formRef}
           className="px-6 md:px-12 py-16"
         >
@@ -307,10 +389,18 @@ const Contact = () => {
                   ))}
                 </span>
               </h2>
-              <p className="text-lg text-foreground/70">
+              <p className="text-lg text-foreground/70 hidden md:block">
                 Fill out the form below and we'll get back to you within 24 hours.
               </p>
             </div>
+
+            <MobileTextWithPopImages
+              blocks={[
+                { type: "text", content: "Ready to start? " },
+                { type: "image", content: "", image: projectImages[0], alt: "Start" },
+                { type: "text", content: " Fill out the form and we'll get back within 24 hours." },
+              ]}
+            />
 
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid md:grid-cols-2 gap-6">
@@ -493,46 +583,50 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="flex justify-center gap-8">
-              <a
-                href="mailto:nextmind@gmail.com"
-                className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
-              >
-                <div className="relative z-10 flex flex-col items-center">
-                  <Mail className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
-                  <h3 className="font-hero text-sm uppercase tracking-wider text-black">
-                    Gmail
-                  </h3>
-                </div>
-              </a>
-
-              <a
-                href="https://wa.me/96176764263"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
-              >
-                <div className="relative z-10 flex flex-col items-center">
-                  <MessageCircle className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
-                  <h3 className="font-hero text-sm uppercase tracking-wider text-black">
-                    WhatsApp
-                  </h3>
-                </div>
-              </a>
-
-              <a
-                href="https://instagram.com/nextmind"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
-              >
-                <div className="relative z-10 flex flex-col items-center">
-                  <Instagram className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
-                  <h3 className="font-hero text-sm uppercase tracking-wider text-black">
-                    Instagram
-                  </h3>
-                </div>
-              </a>
+            <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-8 items-center">
+              <MobileAnimatedCard index={0} direction="left" className="">
+                <a
+                  href="mailto:nextmind@gmail.com"
+                  className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
+                >
+                  <div className="relative z-10 flex flex-col items-center">
+                    <Mail className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
+                    <h3 className="font-hero text-sm uppercase tracking-wider text-black">
+                      Gmail
+                    </h3>
+                  </div>
+                </a>
+              </MobileAnimatedCard>
+              <MobileAnimatedCard index={1} direction="bottom" className="">
+                <a
+                  href="https://wa.me/96176764263"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
+                >
+                  <div className="relative z-10 flex flex-col items-center">
+                    <MessageCircle className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
+                    <h3 className="font-hero text-sm uppercase tracking-wider text-black">
+                      WhatsApp
+                    </h3>
+                  </div>
+                </a>
+              </MobileAnimatedCard>
+              <MobileAnimatedCard index={2} direction="right" className="">
+                <a
+                  href="https://instagram.com/nextmind"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-card group relative p-12 border-4 border-black hover:border-white transition-all duration-300 bg-white/10 hover:bg-white/20 backdrop-blur-sm overflow-hidden flex flex-col items-center"
+                >
+                  <div className="relative z-10 flex flex-col items-center">
+                    <Instagram className="w-20 h-20 text-black mb-4" strokeWidth={1.5} />
+                    <h3 className="font-hero text-sm uppercase tracking-wider text-black">
+                      Instagram
+                    </h3>
+                  </div>
+                </a>
+              </MobileAnimatedCard>
             </div>
           </div>
         </section>

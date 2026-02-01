@@ -175,7 +175,7 @@ const Header = () => {
               <a
                 key={item.label}
                 href={item.href}
-                className="relative z-10 px-3 md:px-4 py-1.5 text-foreground text-xs md:text-sm font-medium tracking-wider uppercase hover:text-orange-300 transition-colors duration-300 rounded"
+                className="hover-zoom-laptop-subtle relative z-10 px-3 md:px-4 py-1.5 text-foreground text-xs md:text-sm font-medium tracking-wider uppercase hover:text-orange-300 transition-colors duration-300 rounded"
               >
                 {item.label}
               </a>

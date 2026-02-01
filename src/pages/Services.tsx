@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileEnhancements from "@/components/MobileEnhancements";
+import { MobileAnimatedSection } from "@/components/MobileAnimatedSection";
+import MobileScrollTextReveal from "@/components/MobileScrollTextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,7 +75,103 @@ const Services = () => {
 
     if (!heroText || !heroText2 || !heroSection || !cardsContainer) return;
 
-    // Split first line into characters
+    const isMobile = window.innerWidth < 768;
+
+    // On mobile: GSAP + scroll-linked animations - text light up, scale, cards from left/right
+    if (isMobile) {
+      // Cards: alternating left/right slide with scale
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+        const fromX = index % 2 === 0 ? -80 : 80;
+        gsap.from(card, {
+          opacity: 0,
+          x: fromX,
+          scale: 0.9,
+          duration: 0.9,
+          ease: "power3.out",
+          scrollTrigger: { trigger: card, start: "top 88%" },
+          delay: index * 0.12,
+        });
+      });
+      if (whatWeDoRef.current) {
+        const items = whatWeDoRef.current.querySelectorAll('.timeline-item');
+        items.forEach((item, index) => {
+          const fromX = index % 2 === 0 ? -60 : 60;
+          gsap.from(item, {
+            opacity: 0,
+            x: fromX,
+            y: 30,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            scrollTrigger: { trigger: item, start: "top 85%" },
+            delay: index * 0.1,
+          });
+        });
+      }
+      if (ctaSection && ctaText) {
+        // Text scale + light up on scroll
+        gsap.from(ctaText, {
+          opacity: 0,
+          y: 50,
+          scale: 0.9,
+          duration: 0.9,
+          ease: "back.out(1.4)",
+          scrollTrigger: { trigger: ctaSection, start: "top 80%" },
+        });
+        ScrollTrigger.create({
+          trigger: ctaSection,
+          start: "top 60%",
+          end: "top 20%",
+          scrub: 1,
+          onUpdate: (self) => {
+            gsap.to(ctaText, {
+              filter: `brightness(${0.8 + self.progress * 0.4})`,
+              scale: 0.98 + self.progress * 0.04,
+              duration: 0.1,
+            });
+          },
+        });
+      }
+      // Mobile hero text - scroll-linked scale/light
+      const mobileHero = heroSection?.querySelector('[class*="md:hidden"]');
+      if (mobileHero) {
+        const heroTitle = mobileHero.querySelector('h1');
+        if (heroTitle) {
+          ScrollTrigger.create({
+            trigger: heroSection,
+            start: "top top",
+            end: "bottom 50%",
+            scrub: 1,
+            onUpdate: (self) => {
+              gsap.to(heroTitle, {
+                opacity: 1 - self.progress * 0.3,
+                scale: 1 - self.progress * 0.1,
+                filter: `brightness(${1 - self.progress * 0.2})`,
+                duration: 0.1,
+              });
+            },
+          });
+        }
+      }
+      // Mobile scroll zoom - sections zoom in/out as they scroll through viewport
+      const zoomSections = document.querySelectorAll('section');
+      zoomSections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          onUpdate: (self) => {
+            const p = self.progress;
+            const scale = p < 0.3 ? 0.97 + (p / 0.3) * 0.04 : p < 0.7 ? 1.01 : 1.01 - ((p - 0.7) / 0.3) * 0.04;
+            gsap.set(section, { scale, transformOrigin: "center center" });
+          },
+        });
+      });
+      return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    }
+
+    // Desktop: Split first line into characters
     const textContent1 = heroText.textContent || "";
     heroText.textContent = "";
     
@@ -307,7 +405,7 @@ const Services = () => {
       <main className="pt-20">
         <section
           ref={heroSectionRef}
-          className="h-screen flex items-center justify-center px-6 md:px-12 relative overflow-hidden bg-background"
+          className="min-h-screen md:h-screen flex items-start md:items-center justify-start md:justify-center pt-24 md:pt-0 px-6 md:px-12 relative overflow-hidden bg-background"
         >
           {dots.map((dot, index) => {
             return (
@@ -348,7 +446,30 @@ const Services = () => {
             );
           })}
 
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
+          {/* Mobile: Stacked hero with Framer Motion */}
+          <div className="md:hidden w-full relative z-50 space-y-4 pb-12">
+            <MobileAnimatedSection animation="slideFromTop" delay={0}>
+              <h1 className="font-hero text-5xl font-bold uppercase leading-tight text-foreground" style={{ textShadow: '0 4px 12px rgba(255, 140, 0, 0.3)' }}>
+                OUR SERVICES
+              </h1>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromLeft" delay={1}>
+              <p className="text-white text-lg leading-relaxed" style={{ wordSpacing: '0.2em' }}>
+                AI solutions, web development, chatbots, mobile apps & more.
+              </p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromRight" delay={2}>
+              <p className="text-orange-500 font-semibold">We build digital products that drive results.</p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="scaleUp" delay={3}>
+              <a href="#services-cards" className="inline-block px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-hero uppercase tracking-wider text-sm rounded-full transition-all">
+                Explore Services
+              </a>
+            </MobileAnimatedSection>
+          </div>
+
+          {/* Desktop: Centered animated hero */}
+          <div className="absolute inset-0 hidden md:flex flex-col items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
             <div className="flex flex-col items-center">
               <h1
                 ref={heroTextRef}
@@ -380,9 +501,12 @@ const Services = () => {
           </div>
         </section>
 
+        <MobileScrollTextReveal text="We build digital products that transform businesses and drive results." />
+
         <section
           ref={cardsContainerRef}
-          className="relative h-screen overflow-hidden"
+          id="services-cards"
+          className="relative min-h-0 md:h-screen overflow-visible md:overflow-hidden"
         >
           {services.map((service, index) => (
             <div
@@ -390,7 +514,7 @@ const Services = () => {
               ref={(el) => {
                 if (el) cardRefs.current[index] = el;
               }}
-              className="absolute inset-0 flex items-center justify-center px-6 md:px-12"
+              className="relative md:absolute md:inset-0 flex items-center justify-center px-6 md:px-12 py-8 md:py-0"
             >
               <div className="w-full max-w-6xl">
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -398,7 +522,7 @@ const Services = () => {
                     <div className="text-sm uppercase tracking-widest text-orange-400 mb-4 font-hero">
                       {service.id} / {String(services.length).padStart(2, '0')}
                     </div>
-                    <h2 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-6 leading-tight">
+                    <h2 className="font-hero text-2xl md:text-6xl lg:text-7xl font-bold uppercase mb-4 md:mb-6 leading-tight">
                       {service.title}
                     </h2>
                     <p className="text-lg md:text-xl text-foreground/80 mb-8 leading-relaxed">
@@ -450,23 +574,23 @@ const Services = () => {
               What We Do
             </h2>
             
-            <div className="relative">
-              {/* Center vertical line */}
+              <div className="relative">
+              {/* Center vertical line - hidden on mobile */}
               <div 
-                className="timeline-line absolute left-1/2 top-0 bottom-0 w-0.5 bg-orange-500/30 origin-top"
+                className="timeline-line absolute left-1/2 top-0 bottom-0 w-0.5 bg-orange-500/30 origin-top hidden md:block"
                 style={{ transform: 'translateX(-50%)' }}
               />
               
               {/* Timeline Items */}
-              <div className="space-y-24">
+              <div className="space-y-8 md:space-y-24">
                 {/* Item 1 - Right side */}
                 <div className="timeline-item relative">
-                  <div className="flex items-center">
-                    <div className="w-1/2 pr-8 md:pr-16" />
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                  <div className="flex flex-col md:flex-row items-center">
+                    <div className="w-full md:w-1/2 md:pr-8 md:pr-16 order-2 md:order-1" />
+                    <div className="timeline-circle w-12 h-12 md:w-16 md:h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-lg md:text-2xl font-bold z-10 mb-4 md:mb-0 md:absolute md:left-1/2 order-1 md:order-2" style={{ transform: 'translateX(-50%)' }}>
                       01
                     </div>
-                    <div className="timeline-box w-1/2 pl-8 md:pl-16">
+                    <div className="timeline-box w-full md:w-1/2 pl-0 md:pl-8 md:pl-16 order-3 text-center md:text-left">
                       <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-br from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
@@ -482,8 +606,8 @@ const Services = () => {
 
                 {/* Item 2 - Left side */}
                 <div className="timeline-item relative">
-                  <div className="flex items-center">
-                    <div className="timeline-box w-1/2 pr-8 md:pr-16 text-right">
+                  <div className="flex flex-col md:flex-row items-center">
+                    <div className="timeline-box w-full md:w-1/2 pr-0 md:pr-8 md:pr-16 text-center md:text-right order-2">
                       <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-bl from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-bl from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
@@ -494,21 +618,21 @@ const Services = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                    <div className="timeline-circle w-12 h-12 md:w-16 md:h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-lg md:text-2xl font-bold z-10 my-4 md:my-0 md:absolute md:left-1/2" style={{ transform: 'translateX(-50%)' }}>
                       02
                     </div>
-                    <div className="w-1/2 pl-8 md:pl-16" />
+                    <div className="w-full md:w-1/2 md:pl-8 md:pl-16" />
                   </div>
                 </div>
 
                 {/* Item 3 - Right side */}
                 <div className="timeline-item relative">
-                  <div className="flex items-center">
-                    <div className="w-1/2 pr-8 md:pr-16" />
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                  <div className="flex flex-col md:flex-row items-center">
+                    <div className="w-full md:w-1/2 md:pr-8 md:pr-16 order-2 md:order-1" />
+                    <div className="timeline-circle w-12 h-12 md:w-16 md:h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-lg md:text-2xl font-bold z-10 mb-4 md:mb-0 md:absolute md:left-1/2 order-1 md:order-2" style={{ transform: 'translateX(-50%)' }}>
                       03
                     </div>
-                    <div className="timeline-box w-1/2 pl-8 md:pl-16">
+                    <div className="timeline-box w-full md:w-1/2 pl-0 md:pl-8 md:pl-16 order-3 text-center md:text-left">
                       <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-br from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
@@ -524,8 +648,8 @@ const Services = () => {
 
                 {/* Item 4 - Left side */}
                 <div className="timeline-item relative">
-                  <div className="flex items-center">
-                    <div className="timeline-box w-1/2 pr-8 md:pr-16 text-right">
+                  <div className="flex flex-col md:flex-row items-center">
+                    <div className="timeline-box w-full md:w-1/2 pr-0 md:pr-8 md:pr-16 text-center md:text-right order-2">
                       <div className="relative p-6 md:p-8 border border-orange-500/30 hover:border-orange-500 transition-all duration-300 bg-gradient-to-bl from-background to-orange-950/10 backdrop-blur-sm overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-bl from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="relative z-10">
@@ -536,10 +660,10 @@ const Services = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="timeline-circle absolute left-1/2 w-16 h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-2xl font-bold z-10" style={{ transform: 'translateX(-50%)' }}>
+                    <div className="timeline-circle w-12 h-12 md:w-16 md:h-16 rounded-full bg-orange-600 border-4 border-background flex items-center justify-center font-hero text-lg md:text-2xl font-bold z-10 mb-4 md:mb-0 md:absolute md:left-1/2 order-1" style={{ transform: 'translateX(-50%)' }}>
                       04
                     </div>
-                    <div className="w-1/2 pl-8 md:pl-16" />
+                    <div className="w-full md:w-1/2 pl-0 md:pl-8 md:pl-16 order-3" />
                   </div>
                 </div>
               </div>

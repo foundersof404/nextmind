@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileEnhancements from "@/components/MobileEnhancements";
+import { MobileAnimatedSection } from "@/components/MobileAnimatedSection";
+import MobileScrollTextReveal from "@/components/MobileScrollTextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,6 +81,75 @@ const About = () => {
     const values = valuesRef.current;
 
     if (!heroText || !heroSection) return;
+
+    const isMobile = window.innerWidth < 768;
+
+    // Mobile: GSAP scroll animations - alternating left/right, text scale, stack effect
+    if (isMobile) {
+      if (story) {
+        const storyElements = story.querySelectorAll('.story-element');
+        storyElements.forEach((el, index) => {
+          const fromX = index % 2 === 0 ? -70 : 70;
+          gsap.from(el, {
+            opacity: 0,
+            x: fromX,
+            y: 40,
+            scale: index % 3 === 0 ? 0.95 : 1,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 85%" },
+            delay: index * 0.1,
+          });
+        });
+      }
+      if (teamGrid) {
+        const teamCards = teamGrid.querySelectorAll('.team-card');
+        teamCards.forEach((card, index) => {
+          const fromX = index % 2 === 0 ? -60 : 60;
+          gsap.from(card, {
+            opacity: 0,
+            x: fromX,
+            y: 50,
+            scale: 0.9,
+            duration: 0.8,
+            ease: "back.out(1.4)",
+            scrollTrigger: { trigger: card, start: "top 88%" },
+            delay: index * 0.12,
+          });
+        });
+      }
+      if (values) {
+        const valueTapes = values.querySelectorAll('.value-tape');
+        valueTapes.forEach((tape, index) => {
+          const fromX = index % 2 === 0 ? -80 : 80;
+          gsap.from(tape, {
+            opacity: 0,
+            x: fromX,
+            scale: 0.9,
+            duration: 0.75,
+            ease: "power2.out",
+            scrollTrigger: { trigger: tape, start: "top 88%" },
+            delay: index * 0.1,
+          });
+        });
+      }
+      // Mobile scroll zoom - sections zoom in/out as they scroll
+      const zoomSections = document.querySelectorAll('section');
+      zoomSections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          onUpdate: (self) => {
+            const p = self.progress;
+            const scale = p < 0.3 ? 0.97 + (p / 0.3) * 0.04 : p < 0.7 ? 1.01 : 1.01 - ((p - 0.7) / 0.3) * 0.04;
+            gsap.set(section, { scale, transformOrigin: "center center" });
+          },
+        });
+      });
+      return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    }
 
     const textContent = heroText.textContent || "";
     heroText.textContent = "";
@@ -210,7 +281,7 @@ const About = () => {
         <main className="pt-20">
         <section
           ref={heroSectionRef}
-          className="h-screen flex items-center justify-center relative overflow-hidden bg-background"
+          className="min-h-screen md:h-screen flex items-start md:items-center justify-start md:justify-center pt-24 md:pt-0 px-6 md:px-12 relative overflow-hidden bg-background"
         >
           {metallicDots.map((dot, index) => (
             <div
@@ -249,7 +320,30 @@ const About = () => {
             />
           ))}
 
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
+          {/* Mobile: Stacked hero with Framer Motion */}
+          <div className="md:hidden w-full relative z-50 space-y-4 pb-12">
+            <MobileAnimatedSection animation="slideFromTop" delay={0}>
+              <h1 className="font-hero text-5xl font-bold uppercase leading-tight text-foreground" style={{ textShadow: '0 4px 12px rgba(255, 140, 0, 0.3)' }}>
+                ABOUT US
+              </h1>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromLeft" delay={1}>
+              <p className="text-white text-lg leading-relaxed" style={{ wordSpacing: '0.2em' }}>
+                Technology that empowers. Digital solutions that transform.
+              </p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromRight" delay={2}>
+              <p className="text-orange-500 font-semibold">Innovation, quality & partnership.</p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="scaleUp" delay={3}>
+              <a href="#story" className="inline-block px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-hero uppercase tracking-wider text-sm rounded-full transition-all">
+                Our Story
+              </a>
+            </MobileAnimatedSection>
+          </div>
+
+          {/* Desktop: Centered hero */}
+          <div className="absolute inset-0 hidden md:flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
             <h1
               ref={heroTextRef}
               className="font-hero text-[20vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-center"
@@ -266,9 +360,12 @@ const About = () => {
           </div>
         </section>
 
+        <MobileScrollTextReveal text="Technology that empowers. Digital solutions that transform businesses worldwide." />
+
         <section
+          id="story"
           ref={storyRef}
-          className="min-h-screen flex items-center justify-center px-6 md:px-12 py-20"
+          className="min-h-screen flex items-center justify-center px-6 md:px-12 py-12 md:py-20"
         >
           <div className="max-w-5xl mx-auto">
             <div className="story-element mb-16">
@@ -315,16 +412,15 @@ const About = () => {
 
         <section
           ref={valuesRef}
-          className="relative bg-background py-20 overflow-hidden"
-          style={{ minHeight: '200vh' }}
+          className="relative bg-background py-12 md:py-20 overflow-hidden min-h-0 md:min-h-[200vh]"
         >
-          <div className="text-center mb-32 pt-10">
-            <h2 className="font-hero text-5xl md:text-7xl font-bold uppercase text-foreground">
+          <div className="text-center mb-16 md:mb-32 pt-6 md:pt-10">
+            <h2 className="font-hero text-4xl md:text-7xl font-bold uppercase text-foreground">
               Our Values
             </h2>
           </div>
           
-          <div className="relative w-full overflow-hidden" style={{ height: '150vh' }}>
+          <div className="relative w-full overflow-visible md:overflow-hidden h-[70vh] md:h-[150vh]">
             {values.map((value, index) => {
               const angles = [10, -10, 10, -10];
               const topPositions = [15, 35, 55, 75];

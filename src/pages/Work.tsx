@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileEnhancements from "@/components/MobileEnhancements";
+import { MobileAnimatedSection } from "@/components/MobileAnimatedSection";
+import MobileTextWithPopImages from "@/components/MobileTextWithPopImages";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -124,7 +126,84 @@ const Work = () => {
 
     if (!heroText || !heroSection || !transformSection || !heroImage || !gridContainer) return;
 
-    // Split text into characters
+    const isMobile = window.innerWidth < 768;
+
+    // Mobile: GSAP - cards from left/right, stack effect, text scale
+    if (isMobile) {
+      const portfolioTitle = document.querySelector('.portfolio-title-section');
+      const gridItems = gridContainer?.querySelectorAll('[class*="group"]');
+      const mobileProjects = document.querySelectorAll('.mobile-project-card');
+      
+      if (portfolioTitle) {
+        gsap.from(portfolioTitle, {
+          opacity: 0,
+          y: 60,
+          scale: 0.95,
+          duration: 0.9,
+          ease: "back.out(1.3)",
+          scrollTrigger: { trigger: portfolioTitle, start: "top 85%" },
+        });
+        const title = portfolioTitle.querySelector('h2');
+        if (title) {
+          ScrollTrigger.create({
+            trigger: portfolioTitle,
+            start: "top 70%",
+            end: "top 30%",
+            scrub: 1,
+            onUpdate: (self) => {
+              gsap.to(title, {
+                filter: `brightness(${0.85 + self.progress * 0.3})`,
+                scale: 0.98 + self.progress * 0.04,
+                duration: 0.1,
+              });
+            },
+          });
+        }
+      }
+      mobileProjects.forEach((el, i) => {
+        const fromX = i % 2 === 0 ? -70 : 70;
+        gsap.from(el, {
+          opacity: 0,
+          x: fromX,
+          scale: 0.9,
+          y: 40,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%" },
+          delay: i * 0.1,
+        });
+      });
+      gridItems?.forEach((el, i) => {
+        const fromX = i % 2 === 0 ? -60 : 60;
+        gsap.from(el, {
+          opacity: 0,
+          x: fromX,
+          scale: 0.92,
+          duration: 0.75,
+          ease: "back.out(1.2)",
+          scrollTrigger: { trigger: el, start: "top 88%" },
+          delay: i * 0.08,
+        });
+      });
+      // Mobile scroll zoom - sections zoom in/out as they scroll
+      const zoomSections = document.querySelectorAll('section');
+      zoomSections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          onUpdate: (self) => {
+            const p = self.progress;
+            const scale = p < 0.3 ? 0.97 + (p / 0.3) * 0.04 : p < 0.7 ? 1.01 : 1.01 - ((p - 0.7) / 0.3) * 0.04;
+            gsap.set(section, { scale, transformOrigin: "center center" });
+          },
+        });
+      });
+      return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    }
+
+    // Desktop: Split text into characters
     const textContent = heroText.textContent || "";
     heroText.textContent = "";
     
@@ -301,9 +380,52 @@ const Work = () => {
         {/* Hero Section with Text */}
         <section
           ref={heroSectionRef}
-          className="h-screen flex items-center justify-center relative overflow-hidden bg-background"
+          className="min-h-screen md:h-screen flex items-start md:items-center justify-start md:justify-center pt-24 md:pt-0 px-6 md:px-12 relative overflow-hidden bg-background"
         >
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
+          {/* Metallic Dots - add if missing */}
+          {metallicDots.map((dot, index) => (
+            <div
+              key={index}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                top: dot.top,
+                left: dot.left,
+                width: dot.size,
+                height: dot.size,
+                background: dot.type === 'orange'
+                  ? `radial-gradient(circle at 30% 30%, hsl(30, 100%, 65%) 0%, hsl(30, 100%, 55%) 40%, hsl(30, 90%, 45%) 70%, hsl(30, 80%, 35%) 100%)`
+                  : `radial-gradient(circle at 30% 30%, hsl(220, 20%, 90%) 0%, hsl(220, 15%, 70%) 40%, hsl(220, 10%, 50%) 70%, hsl(220, 8%, 30%) 100%)`,
+                boxShadow: dot.type === 'orange'
+                  ? `0 ${dot.size / 4}px ${dot.size / 2}px rgba(255, 140, 0, 0.4)`
+                  : `0 ${dot.size / 4}px ${dot.size / 2}px rgba(0, 0, 0, 0.3)`,
+                animationDelay: `${dot.delay}s`,
+                animationDuration: '3s',
+              }}
+            />
+          ))}
+          {/* Mobile: Stacked hero with Framer Motion */}
+          <div className="md:hidden w-full relative z-50 space-y-4 pb-12">
+            <MobileAnimatedSection animation="slideFromTop" delay={0}>
+              <h1 className="font-hero text-5xl font-bold uppercase leading-tight text-foreground" style={{ textShadow: '0 4px 12px rgba(255, 140, 0, 0.3)' }}>
+                OUR WORK
+              </h1>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromLeft" delay={1}>
+              <p className="text-white text-lg leading-relaxed" style={{ wordSpacing: '0.2em' }}>
+                Transforming ideas into exceptional digital experiences.
+              </p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="slideFromRight" delay={2}>
+              <p className="text-orange-500 font-semibold">Websites, apps, brands & AI solutions.</p>
+            </MobileAnimatedSection>
+            <MobileAnimatedSection animation="scaleUp" delay={3}>
+              <a href="#portfolio-grid" className="inline-block px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-hero uppercase tracking-wider text-sm rounded-full transition-all">
+                View Projects
+              </a>
+            </MobileAnimatedSection>
+          </div>
+          {/* Desktop: Centered hero */}
+          <div className="absolute inset-0 hidden md:flex items-center justify-center pointer-events-none px-4" style={{ zIndex: 50 }}>
             <h1
               ref={heroTextRef}
               className="font-hero text-[20vw] md:text-[18vw] lg:text-[16vw] font-bold uppercase leading-[0.85] tracking-tight text-center"
@@ -321,19 +443,29 @@ const Work = () => {
         </section>
 
         {/* Portfolio Title Section */}
-        <section className="py-20 px-6 md:px-12 text-center bg-background">
+        <section className="portfolio-title-section py-12 md:py-20 px-6 md:px-12 text-center bg-background">
           <h2 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold uppercase mb-6">
             Our Portfolio
           </h2>
-          <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto hidden md:block">
             Transforming ideas into exceptional digital experiences. Explore our diverse range of projects.
           </p>
         </section>
 
-        {/* Transform Section: 1 Hero -> 3 Portrait -> 1 Hero -> 6 Images */}
+        <MobileTextWithPopImages
+          blocks={[
+            { type: "text", content: "Transforming " },
+            { type: "image", content: "", image: projects[0].image, alt: "Design" },
+            { type: "text", content: " ideas into exceptional " },
+            { type: "image", content: "", image: projects[1].image, alt: "Digital" },
+            { type: "text", content: " digital experiences." },
+          ]}
+        />
+
+        {/* Transform Section: 1 Hero -> 3 Portrait -> 1 Hero -> 6 Images (Desktop) / Simple grid (Mobile) */}
         <section
           ref={transformSectionRef}
-          className="h-screen relative overflow-hidden bg-background"
+          className="min-h-[50vh] md:h-screen relative overflow-hidden bg-background py-12 md:py-0"
         >
           {/* Metallic Dots Background */}
           {metallicDots.map((dot, index) => (
@@ -373,8 +505,27 @@ const Work = () => {
             />
           ))}
 
-          {/* Content Container */}
-          <div className="relative z-10 h-full flex items-center justify-center px-6 md:px-12">
+          {/* Mobile: Simple featured projects grid */}
+          <div className="md:hidden relative z-10 px-6 pb-8">
+            <div className="grid grid-cols-2 gap-4">
+              {projects.slice(0, 6).map((project, index) => (
+                <div
+                  key={project.id}
+                  className="mobile-project-card group relative overflow-hidden rounded-xl aspect-square"
+                >
+                  <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-xs uppercase text-orange-400 mb-1">{project.type}</p>
+                    <h3 className="font-hero text-sm font-bold uppercase text-white">{project.title}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: Content Container */}
+          <div className="relative z-10 h-full hidden md:flex items-center justify-center px-6 md:px-12">
 
             {/* 3 Portrait Images */}
             <div className="absolute inset-0 flex items-center justify-center gap-6 px-6 md:px-12">
@@ -464,19 +615,17 @@ const Work = () => {
           </div>
 
           {/* Bento Grid Layout */}
-          <div className="max-w-7xl mx-auto grid grid-cols-12 gap-4 auto-rows-[200px]">
-            {/* Background images that appear faded */}
+          <div id="portfolio-grid" className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-12 gap-3 md:gap-4 auto-rows-[140px] md:auto-rows-[200px]">
             {projects.map((project, index) => {
-              const isWebsite = project.type === "Website" || project.type === "Web App";
               const gridClasses = [
-                "col-span-4 row-span-2", // Small square
-                "col-span-4 row-span-3", // Portrait
-                "col-span-4 row-span-2", // Small square
-                "col-span-8 row-span-2", // Wide landscape
-                "col-span-4 row-span-3", // Portrait
-                "col-span-4 row-span-2", // Small square
-                "col-span-4 row-span-2", // Small square
-                "col-span-4 row-span-3", // Portrait
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-2",
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-3",
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-2",
+                "col-span-2 md:col-span-8 row-span-1 md:row-span-2",
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-3",
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-2",
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-2",
+                "col-span-2 md:col-span-4 row-span-1 md:row-span-3",
               ];
 
               return (

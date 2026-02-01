@@ -90,6 +90,24 @@ html {
   }
 }
 
+/* Laptop/Desktop: Hover zoom on buttons, links, footer (home page) */
+@media (min-width: 768px) {
+  .hover-zoom-laptop {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center center;
+  }
+  .hover-zoom-laptop:hover {
+    transform: scale(1.08);
+  }
+  .hover-zoom-laptop-subtle {
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center center;
+  }
+  .hover-zoom-laptop-subtle:hover {
+    transform: scale(1.05);
+  }
+}
+
 /* Gooey Footer Particle Animation */
 .gooey-particle {
   position: absolute;

@@ -41,7 +41,7 @@ const MenuOverlay = ({ isOpen, onClose }: MenuOverlayProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-background"
+      className="fixed inset-0 z-[10001] bg-black"
       style={{
         clipPath: isAnimating 
           ? "polygon(-20% 0, 100% 0, 100% 100%, 0% 100%)" 

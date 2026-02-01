@@ -28,6 +28,7 @@ const MobileEnhancements = ({ children }: MobileEnhancementsProps) => {
       scaleX: 1,
       ease: "none",
       scrollTrigger: {
+        trigger: container,
         start: "top top",
         end: "bottom bottom",
         scrub: 0.3,

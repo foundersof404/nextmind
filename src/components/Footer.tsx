@@ -275,7 +275,7 @@ const Footer = () => {
               <p className="text-white/80 mb-4 text-base md:text-lg font-medium">Ready to build something amazing?</p>
               <a
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-full group w-full md:w-auto"
+                className="hover-zoom-laptop inline-flex items-center justify-center gap-2 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-hero uppercase tracking-wider text-sm transition-all duration-300 hover:shadow-2xl rounded-full group w-full md:w-auto"
               >
                 Get Started
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -328,7 +328,7 @@ const Footer = () => {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-full bg-black/10 border border-black/30 flex items-center justify-center text-black hover:bg-black hover:text-white hover:scale-110 transition-all duration-300"
+                        className="hover-zoom-laptop w-10 h-10 rounded-full bg-black/10 border border-black/30 flex items-center justify-center text-black hover:bg-black hover:text-white transition-all duration-300"
                         aria-label={social.label}
                       >
                         <Icon className="w-5 h-5" />
@@ -348,7 +348,7 @@ const Footer = () => {
                     <li key={index}>
                       <a
                         href={link.href}
-                        className="text-black/80 hover:text-black inline-block transition-all duration-300 group text-sm md:text-base md:hover:translate-x-2"
+                        className="hover-zoom-laptop-subtle text-black/80 hover:text-black inline-block transition-all duration-300 group text-sm md:text-base"
                       >
                         <span className="hidden md:inline-block mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                         {link.name}
@@ -382,7 +382,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="mailto:nextmind@gmail.com"
-                      className="flex items-start justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
+                      className="hover-zoom-laptop-subtle flex items-start justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
                     >
                       <Mail className="w-5 h-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
                       <span className="text-sm break-all">nextmind@gmail.com</span>
@@ -391,7 +391,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="tel:+96176764263"
-                      className="flex items-center justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
+                      className="hover-zoom-laptop-subtle flex items-center justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
                     >
                       <Phone className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
                       <span className="text-sm">+961 76 764 263</span>
@@ -400,7 +400,7 @@ const Footer = () => {
                   <li>
                     <a
                       href="tel:+96181939088"
-                      className="flex items-center justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
+                      className="hover-zoom-laptop-subtle flex items-center justify-center md:justify-start gap-3 text-black/80 hover:text-black transition-colors group"
                     >
                       <Phone className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
                       <span className="text-sm">+961 81 939 088</span>
@@ -420,11 +420,11 @@ const Footer = () => {
                 © {currentYear} Next Mind Agency. All rights reserved.
               </p>
               <div className="flex gap-4 md:gap-6 text-xs md:text-sm text-black/70">
-                <a href="/privacy" className="hover:text-black transition-colors">
+                <a href="/privacy" className="hover-zoom-laptop-subtle hover:text-black transition-colors inline-block">
                   Privacy Policy
                 </a>
                 <span>•</span>
-                <a href="/terms" className="hover:text-black transition-colors">
+                <a href="/terms" className="hover-zoom-laptop-subtle hover:text-black transition-colors inline-block">
                   Terms of Service
                 </a>
               </div>
